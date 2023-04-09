@@ -1,6 +1,7 @@
 use sui::client_commands::{WalletContext, call_move};
-use sui::config;
+// use sui::config;
 use anyhow::{Result, anyhow};
+use tokio::{time, task};
 use binance::api::Binance;
 use binance::market::Market;
 
@@ -18,5 +19,17 @@ async fn main() -> Result<()> {
         .or(Err(anyhow!("Failed to get active address")))?;
     println!("active address: {:?}", active_address);
 
+    let forever = task::spawn(async {
+        let mut interval = time::interval(time::Duration::from_secs(10));
+        let market: Market = Binance::new(None, None);
+        loop {
+            interval.tick().await;
+            if let Ok(resp) = market.get_price("BTCUSDT").await {
+                let price_u64 = (resp.price * 1_000_000.0) as u64;
+            };
+        }
+    });
+
+    forever.await?;
     Ok(())
 }

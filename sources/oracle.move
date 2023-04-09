@@ -16,8 +16,8 @@ module bucket_oracle::oracle {
 
     fun init(ctx: &mut TxContext) {
         let (oracle, admin_cap) = new_oracle(ctx);
-        create_price_feed<SUI>(&admin_cap, &mut oracle, 1000000, ctx);
-        update_price<SUI>(&admin_cap, &mut oracle, 10000000000);
+        create_price_feed<SUI>(&admin_cap, &mut oracle, 1000, ctx);
+        update_price<SUI>(&admin_cap, &mut oracle, 10000000);
         transfer::transfer(admin_cap, tx_context::sender(ctx));
         transfer::share_object(oracle);
     }
@@ -43,8 +43,12 @@ module bucket_oracle::oracle {
         price_feed::get_price<T>(get_price_feed(oracle))
     }
 
-    public fun update_price<T>(_: &AdminCap, oracle: &mut BucketOracle, new_price: u64) {
+    public entry fun update_price<T>(_: &AdminCap, oracle: &mut BucketOracle, new_price: u64) {
         price_feed::update_price<T>(get_price_feed_mut(oracle), new_price);
+    }
+
+    public entry fun update_denominator<T>(_: &AdminCap, oracle: &mut BucketOracle, new_denominator: u64) {
+        price_feed::update_denominator<T>(get_price_feed_mut(oracle), new_denominator);
     }
 
     fun get_price_feed<T>(oracle: &BucketOracle): &PriceFeed<T> {
@@ -74,7 +78,7 @@ module bucket_oracle::oracle {
         let scenario_val = test_scenario::begin(dev);
         let scenario = &mut scenario_val;
 
-        let init_denominator = 1000000;
+        let init_denominator = 1000;
         let (oracle, admin_cap) = new_for_testing<SUI>(init_denominator, test_scenario::ctx(scenario));
 
         let loop_count = 10;

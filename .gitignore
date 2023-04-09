@@ -15,3 +15,6 @@ build/
 # Added by cargo
 
 /target
+
+# IntelliJ IDEA
+.idea/

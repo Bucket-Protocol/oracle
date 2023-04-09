@@ -20,6 +20,10 @@ module bucket_oracle::price_feed {
         (price_feed.price, price_feed.denominator)
     }
 
+    public(friend) fun update_denominator<T>(price_feed: &mut PriceFeed<T>, new_denominator: u64) {
+        price_feed.denominator = new_denominator;
+    }
+
     public(friend) fun update_price<T>(price_feed: &mut PriceFeed<T>, new_price: u64) {
         price_feed.price = new_price;
     }
