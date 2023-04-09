@@ -1,0 +1,19 @@
+2023-04-09T07:49:23.638267Z  INFO sui::client_commands: Active environment switched to [devnet]
+2023-04-09T07:49:30.342913Z  WARN sui::client_commands: Client/Server api version mismatch, client api version : 0.30.0, server api version : 0.29.2
+2023-04-09T07:49:30.553183Z  INFO sui::client_commands:                              Object ID                              |  Gas Value 
+2023-04-09T07:49:30.553266Z  INFO sui::client_commands: ----------------------------------------------------------------------------------
+2023-04-09T07:50:16.240480Z  INFO sui::client_commands: Active environment switched to [testnet]
+2023-04-09T07:54:35.189661Z  INFO sui::client_commands: Added new Sui env [atestnet] to config.
+2023-04-09T07:54:43.622160Z  INFO sui::client_commands: Active environment switched to [atestnet]
+2023-04-09T07:54:52.619013Z  INFO sui::client_commands:                              Object ID                              |  Gas Value 
+2023-04-09T07:54:52.619133Z  INFO sui::client_commands: ----------------------------------------------------------------------------------
+2023-04-09T07:54:52.619139Z  INFO sui::client_commands:  0x19cfc2bcde2ae569d99458b86d4a7a929ee51509d33b7f0f6506662c134860c9 |  200000000 
+2023-04-09T07:54:52.619143Z  INFO sui::client_commands:  0x20c9e3f9cec52006966472dd2b840bee26e43306921bb5daac020745ff24bf33 |  200000000 
+2023-04-09T07:54:52.619148Z  INFO sui::client_commands:  0x29bdd277d013afcc42fb1b22510432fce610ee3edfdbfda437d272f0b2ed4efe |  200000000 
+2023-04-09T07:54:52.619152Z  INFO sui::client_commands:  0x5e6e60912bc19a4be6fb958306a1ebee3611a159b68a57303c9527c691191a36 |  200000000 
+2023-04-09T07:54:52.619157Z  INFO sui::client_commands:  0x91a72761eacf99553507e267b9c769a8c295d8b3fbb03424c6d23d9d05b9e1cf |  200000000 
+2023-04-09T07:54:52.619160Z  INFO sui::client_commands:  0x9749661e8117db5d830d94ba20de8b1c1a3e2dd145b270f1ca33eb776917f5a9 |  200000000 
+2023-04-09T07:54:52.619164Z  INFO sui::client_commands:  0xcfa73015ab4dfcd6621bc1c1005b0d08d317f0e52d531b48b422898c5454f8bc |  200000000 
+2023-04-09T07:54:52.619168Z  INFO sui::client_commands:  0xd2c130d3caa3f2ab514a79d040e1ff9ef771a9b57c9ca456081c61091d582ffe |  200000000 
+2023-04-09T07:54:52.619171Z  INFO sui::client_commands:  0xd726fe3a897d835104688eade6385c90a7c118439840cd0618d1519488fec669 |  200000000 
+2023-04-09T07:54:52.619181Z  INFO sui::client_commands:  0xdc109860a45344ce16243d5ec94332faa0a2214dd5668bf44776a96596a78273 |  200000000 

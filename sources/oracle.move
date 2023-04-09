@@ -10,7 +10,7 @@ module bucket_oracle::oracle {
 
     struct AdminCap has key { id: UID }
 
-    struct Oracle has key { id: UID }
+    struct BucketOracle has key { id: UID }
 
     struct PriceFeedType<phantom T> has copy, drop, store {}
 
@@ -22,13 +22,13 @@ module bucket_oracle::oracle {
         transfer::share_object(oracle);
     }
 
-    fun new_oracle(ctx: &mut TxContext): (Oracle, AdminCap) {
-        (Oracle { id: object::new(ctx) }, AdminCap { id: object::new(ctx) })
+    fun new_oracle(ctx: &mut TxContext): (BucketOracle, AdminCap) {
+        (BucketOracle { id: object::new(ctx) }, AdminCap { id: object::new(ctx) })
     }
 
     public fun create_price_feed<T>(
         _: &AdminCap,
-        oracle: &mut Oracle,
+        oracle: &mut BucketOracle,
         denominator: u64,
         ctx: &mut TxContext
     ) {
@@ -39,31 +39,31 @@ module bucket_oracle::oracle {
         );
     }
 
-    public fun get_price<T>(oracle: &Oracle): (u64, u64) {
+    public fun get_price<T>(oracle: &BucketOracle): (u64, u64) {
         price_feed::get_price<T>(get_price_feed(oracle))
     }
 
-    public fun update_price<T>(_: &AdminCap, oracle: &mut Oracle, new_price: u64) {
+    public fun update_price<T>(_: &AdminCap, oracle: &mut BucketOracle, new_price: u64) {
         price_feed::update_price<T>(get_price_feed_mut(oracle), new_price);
     }
 
-    fun get_price_feed<T>(oracle: &Oracle): &PriceFeed<T> {
+    fun get_price_feed<T>(oracle: &BucketOracle): &PriceFeed<T> {
         dof::borrow<PriceFeedType<T>, PriceFeed<T>>(&oracle.id, PriceFeedType<T> {})
     }
 
-    fun get_price_feed_mut<T>(oracle: &mut Oracle): &mut PriceFeed<T> {
+    fun get_price_feed_mut<T>(oracle: &mut BucketOracle): &mut PriceFeed<T> {
         dof::borrow_mut<PriceFeedType<T>, PriceFeed<T>>(&mut oracle.id, PriceFeedType<T> {})
     }
 
     #[test_only]
-    public fun new_for_testing<T>(denominator: u64, ctx: &mut TxContext): (Oracle, AdminCap) {
+    public fun new_for_testing<T>(denominator: u64, ctx: &mut TxContext): (BucketOracle, AdminCap) {
         let (oracle, admin_cap) = new_oracle(ctx);
         create_price_feed<T>(&admin_cap, &mut oracle, denominator, ctx);
         (oracle, admin_cap)
     }
 
     #[test]
-    fun test_price_feed(): (Oracle, AdminCap) {
+    fun test_price_feed(): (BucketOracle, AdminCap) {
         use sui::test_random;
         use sui::test_scenario;
         use std::vector;

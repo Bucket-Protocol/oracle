@@ -11,3 +11,7 @@ Cargo.lock
 
 # Move files
 build/
+
+# Added by cargo
+
+/target

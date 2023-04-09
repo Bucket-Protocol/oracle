@@ -1,0 +1,13 @@
+[package]
+name = "bucket_oracle"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+dirs = "5.0.0"
+tokio = { version = "1", features = ["full"] }
+sui = { git = "https://github.com/MystenLabs/sui", branch = "testnet" }
+binance = { git = "https://github.com/wisespace-io/binance-rs.git" }
