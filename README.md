@@ -4,9 +4,9 @@ Mock oracle on Sui testnet, feeding prices from Binance.
 ### Testnet
 Package ID
 ```
-0x39f663bdbf2f19502e9a7c47a9f2826ad11489d2a5234539168acbf2161fa113
+0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85af
 ```
 Oracle Object ID
 ```
-0xc6b7ef0bd0613ecd9f50f043a5c4ff3dffb58b25737b7cda30e96d43c4541a49
+0x5d552a9bd3162633c6990b8f8cbdc3a4280eec3687cdcb05984a977f0eccea90
 ```
