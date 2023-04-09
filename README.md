@@ -1,4 +1,4 @@
-# oracle
+# Bucket Oracle
 Mock oracle on Sui testnet, feeding prices from Binance.
 
 ### Testnet
