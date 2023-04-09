@@ -1,7 +1,7 @@
 [package]
 name = "BucketOracle"
 version = "0.0.1"
-published-at = "0xbd60d33c7ddb6e78331a5ebb632a44cc7fdb1009ec7bcb841794e1289da47cfd"
+published-at = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85af"
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }

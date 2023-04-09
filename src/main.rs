@@ -25,7 +25,7 @@ async fn main() -> Result<()> {
         loop {
             interval.tick().await;
             if let Ok(resp) = market.get_price("BTCUSDT").await {
-                let price_u64 = (resp.price * 1_000_000.0) as u64;
+                let price_u64 = (resp.price * 1_000.0) as u64;
             };
         }
     });
