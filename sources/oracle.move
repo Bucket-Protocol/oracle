@@ -17,7 +17,7 @@ module bucket_oracle::oracle {
     fun init(ctx: &mut TxContext) {
         let (oracle, admin_cap) = new_oracle(ctx);
         create_price_feed<SUI>(&admin_cap, &mut oracle, 1000000, ctx);
-        update_price<SUI>(&admin_cap, &mut oracle, 1000000);
+        update_price<SUI>(&admin_cap, &mut oracle, 10000000000);
         transfer::transfer(admin_cap, tx_context::sender(ctx));
         transfer::share_object(oracle);
     }
