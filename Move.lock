@@ -5,6 +5,7 @@ version = 0
 
 dependencies = [
   { name = "Sui" },
+  { name = "SwitchboardStdLib" },
 ]
 
 [[move.package]]
@@ -17,4 +18,13 @@ source = { git = "https://github.com/MystenLabs/sui.git", rev = "testnet", subdi
 
 dependencies = [
   { name = "MoveStdlib" },
+]
+
+[[move.package]]
+name = "SwitchboardStdLib"
+source = { local = "switchboard_std" }
+
+dependencies = [
+  { name = "MoveStdlib" },
+  { name = "Sui" },
 ]
