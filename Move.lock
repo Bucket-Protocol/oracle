@@ -32,7 +32,7 @@ dependencies = [
 
 [[move.package]]
 name = "SwitchboardStdLib"
-source = { local = "switchboard_std" }
+source = { local = "switchboard" }
 
 dependencies = [
   { name = "MoveStdlib" },
