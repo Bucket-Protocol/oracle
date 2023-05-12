@@ -28,12 +28,16 @@ module bucket_oracle::single_oracle {
         latest_update_ms: u64,
         epoch: u64,
         // oracle configs
-        switchboard_id_opt: Option<ID>,
+        switchboard_config: Option<ID>,
         // pyth_id: Option<PriceIdentifier>,
         // supra_id: Option<vector<u8>>,
     }
 
-    public(friend) fun new<T>(precision_decimal: u8, ctx: &mut TxContext): SingleOracle<T> {
+    public(friend) fun new<T>(
+        precision_decimal: u8,
+        switchboard_config: Option<ID>,
+        ctx: &mut TxContext,
+    ): SingleOracle<T> {
         SingleOracle {
             id: object::new(ctx),
             price: 0,
@@ -41,7 +45,7 @@ module bucket_oracle::single_oracle {
             precision: math::pow(10, precision_decimal),
             latest_update_ms: 0,
             epoch: 0,
-            switchboard_id_opt: option::none(),
+            switchboard_config,
             // pyth_id: option::none(),
             // supra_id: option::none(),
         }
@@ -54,14 +58,23 @@ module bucket_oracle::single_oracle {
 
     public fun get_tolerance_ms(): u64 { TOLERANCE_MS }
 
+    public(friend) fun update_switchboard_config<T>(oracle: &mut SingleOracle<T>, config: Option<ID>) {
+        oracle.switchboard_config = config;
+    }
+
+    // only on testnet
+    public(friend) fun update_price_from_admin<T>(oracle: &mut SingleOracle<T>, price: u64) {
+        oracle.price = price;
+    }
+
     public fun is_valid_from_switchboard<T>(oracle: &mut SingleOracle<T>,
         clock: &Clock,
         source: &Aggregator,
     ): bool {
-        option::is_some(&oracle.switchboard_id_opt) &&
-        option::borrow(&oracle.switchboard_id_opt) == &object::id(source) &&
+        option::is_some(&oracle.switchboard_config) &&
+        option::borrow(&oracle.switchboard_config) == &object::id(source) &&
         {
-            let (_, latest_timestamp) = switchboard_parser::parse_switchboard_price(source, oracle.precision_decimal);
+            let (_, latest_timestamp) = switchboard_parser::parse_price(source, oracle.precision_decimal);
             clock::timestamp_ms(clock) - latest_timestamp <= TOLERANCE_MS
         }
     }
@@ -72,9 +85,9 @@ module bucket_oracle::single_oracle {
         source: &Aggregator,
         ctx: &TxContext
     ) {
-        assert!(option::is_some(&oracle.switchboard_id_opt), ENoSourceConfig);
-        assert!(option::borrow(&oracle.switchboard_id_opt) == &object::id(source), EWrongSourceConfig);
-        let (price, latest_timestamp) = switchboard_parser::parse_switchboard_price(source, oracle.precision_decimal);
+        assert!(option::is_some(&oracle.switchboard_config), ENoSourceConfig);
+        assert!(option::borrow(&oracle.switchboard_config) == &object::id(source), EWrongSourceConfig);
+        let (price, latest_timestamp) = switchboard_parser::parse_price(source, oracle.precision_decimal);
         let current_timestamp = clock::timestamp_ms(clock);
         assert!(current_timestamp - latest_timestamp <= TOLERANCE_MS, ESourceOutdated);
         oracle.price = price;
