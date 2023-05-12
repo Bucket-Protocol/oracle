@@ -6,7 +6,7 @@ published-at = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
 SwitchboardStdLib = { local = "./switchboard_std" }
-# Pyth = { git = "https://github.com/pyth-network/pyth-crosschain.git", subdir = "target_chains/sui/contracts", rev = "main" }
+Pyth = { local = "./pyth" }
 
 [addresses]
 bucket_oracle = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85af"

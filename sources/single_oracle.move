@@ -7,7 +7,9 @@ module bucket_oracle::single_oracle {
     use std::option::{Self, Option};
 
     use switchboard_std::aggregator::Aggregator;
+    use pyth::price_identifier::PriceIdentifier;
     use bucket_oracle::switchboard_parser;
+    use bucket_oracle::pyth_parser;
 
     friend bucket_oracle::bucket_oracle;
 
@@ -29,15 +31,18 @@ module bucket_oracle::single_oracle {
         epoch: u64,
         // oracle configs
         switchboard_config: Option<ID>,
-        // pyth_id: Option<PriceIdentifier>,
+        pyth_config: Option<PriceIdentifier>,
         // supra_id: Option<vector<u8>>,
     }
 
     public(friend) fun new<T>(
         precision_decimal: u8,
-        switchboard_config: Option<ID>,
+        switchboard_config: Option<address>,
+        pyth_config: vector<u8>,
         ctx: &mut TxContext,
     ): SingleOracle<T> {
+        let switchboard_config = switchboard_parser::parse_config(switchboard_config);
+        let pyth_config = pyth_parser::parse_config(pyth_config);
         SingleOracle {
             id: object::new(ctx),
             price: 0,
@@ -46,7 +51,7 @@ module bucket_oracle::single_oracle {
             latest_update_ms: 0,
             epoch: 0,
             switchboard_config,
-            // pyth_id: option::none(),
+            pyth_config,
             // supra_id: option::none(),
         }
     }
@@ -58,7 +63,8 @@ module bucket_oracle::single_oracle {
 
     public fun get_tolerance_ms(): u64 { TOLERANCE_MS }
 
-    public(friend) fun update_switchboard_config<T>(oracle: &mut SingleOracle<T>, config: Option<ID>) {
+    public(friend) fun update_switchboard_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
+        let config = switchboard_parser::parse_config(config);
         oracle.switchboard_config = config;
     }
 

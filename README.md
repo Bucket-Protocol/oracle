@@ -1,5 +1,5 @@
 # Bucket Oracle
-Mock oracle on Sui testnet, feeding prices from Binance.
+Aggregate price from Switchboard, Pyth and Supra on Sui.
 
 ## Testnet
 Package ID

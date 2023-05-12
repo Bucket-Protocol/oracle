@@ -4,6 +4,7 @@
 version = 0
 
 dependencies = [
+  { name = "Pyth" },
   { name = "Sui" },
   { name = "SwitchboardStdLib" },
 ]
@@ -11,6 +12,15 @@ dependencies = [
 [[move.package]]
 name = "MoveStdlib"
 source = { git = "https://github.com/MystenLabs/sui.git", rev = "testnet", subdir = "crates/sui-framework/packages/move-stdlib" }
+
+[[move.package]]
+name = "Pyth"
+source = { local = "pyth" }
+
+dependencies = [
+  { name = "Sui" },
+  { name = "Wormhole" },
+]
 
 [[move.package]]
 name = "Sui"
@@ -26,5 +36,13 @@ source = { local = "switchboard_std" }
 
 dependencies = [
   { name = "MoveStdlib" },
+  { name = "Sui" },
+]
+
+[[move.package]]
+name = "Wormhole"
+source = { local = "wormhole" }
+
+dependencies = [
   { name = "Sui" },
 ]
