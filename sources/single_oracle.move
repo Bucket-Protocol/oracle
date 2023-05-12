@@ -94,4 +94,9 @@ module bucket_oracle::single_oracle {
         oracle.latest_update_ms = current_timestamp;
         oracle.epoch = tx_context::epoch(ctx);
     }
+
+    #[test_only]
+    public fun update_price_for_testing<T>(oracle: &mut SingleOracle<T>, price: u64) {
+        oracle.price = price;
+    }
 }
