@@ -15,7 +15,7 @@ source = { git = "https://github.com/MystenLabs/sui.git", rev = "testnet", subdi
 
 [[move.package]]
 name = "Pyth"
-source = { local = "pyth" }
+source = { local = "partners/pyth" }
 
 dependencies = [
   { name = "Sui" },
@@ -32,7 +32,7 @@ dependencies = [
 
 [[move.package]]
 name = "SwitchboardStdLib"
-source = { local = "switchboard" }
+source = { local = "partners/switchboard" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -41,7 +41,7 @@ dependencies = [
 
 [[move.package]]
 name = "Wormhole"
-source = { local = "wormhole" }
+source = { local = "partners/wormhole" }
 
 dependencies = [
   { name = "Sui" },
