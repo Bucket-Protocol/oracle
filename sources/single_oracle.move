@@ -69,8 +69,9 @@ module bucket_oracle::single_oracle {
     }
 
     // only on testnet
-    public(friend) fun update_price_from_admin<T>(oracle: &mut SingleOracle<T>, price: u64) {
+    public(friend) fun update_price_from_admin<T>(oracle: &mut SingleOracle<T>, clock: &Clock, price: u64) {
         oracle.price = price;
+        oracle.latest_update_ms = clock::timestamp_ms(clock);
     }
 
     public fun is_valid_from_switchboard<T>(oracle: &mut SingleOracle<T>,

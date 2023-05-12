@@ -68,10 +68,11 @@ module bucket_oracle::bucket_oracle {
     public entry fun update_price<T>(
         _: &AdminCap,
         bucket_oracle: &mut BucketOracle,
+        clock: &Clock,
         price: u64,
     ) {
         let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        single_oracle::update_price_from_admin<T>(oracle, price);
+        single_oracle::update_price_from_admin<T>(oracle, clock, price);
     }
 
     public fun get_price<T>(bucket_oracle: &BucketOracle, clock: &Clock): (u64, u64) {
