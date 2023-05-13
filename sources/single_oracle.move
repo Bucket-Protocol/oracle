@@ -8,8 +8,10 @@ module bucket_oracle::single_oracle {
 
     use switchboard_std::aggregator::Aggregator;
     use pyth::price_identifier::PriceIdentifier;
+    use supra::price_feed::OracleHolder;
     use bucket_oracle::switchboard_parser;
     use bucket_oracle::pyth_parser;
+    use bucket_oracle::supra_parser;
 
     friend bucket_oracle::bucket_oracle;
 
@@ -32,13 +34,14 @@ module bucket_oracle::single_oracle {
         // oracle configs
         switchboard_config: Option<ID>,
         pyth_config: Option<PriceIdentifier>,
-        // supra_id: Option<vector<u8>>,
+        supra_config: Option<u32>,
     }
 
     public(friend) fun new<T>(
         precision_decimal: u8,
         switchboard_config: Option<address>,
         pyth_config: vector<u8>,
+        supra_config: Option<u32>,
         ctx: &mut TxContext,
     ): SingleOracle<T> {
         let switchboard_config = switchboard_parser::parse_config(switchboard_config);
@@ -52,7 +55,7 @@ module bucket_oracle::single_oracle {
             epoch: 0,
             switchboard_config,
             pyth_config,
-            // supra_id: option::none(),
+            supra_config,
         }
     }
 
@@ -63,26 +66,37 @@ module bucket_oracle::single_oracle {
 
     public fun get_tolerance_ms(): u64 { TOLERANCE_MS }
 
-    public(friend) fun update_switchboard_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
-        let config = switchboard_parser::parse_config(config);
-        oracle.switchboard_config = config;
-    }
-
     // only on testnet
     public(friend) fun update_price_from_admin<T>(oracle: &mut SingleOracle<T>, clock: &Clock, price: u64) {
         oracle.price = price;
         oracle.latest_update_ms = clock::timestamp_ms(clock);
     }
 
-    public fun is_valid_from_switchboard<T>(oracle: &mut SingleOracle<T>,
+    ////////////////////////////////////////////////////////////////////////
+    //
+    //    Swichboard
+    //
+    ////////////////////////////////////////////////////////////////////////
+
+    public(friend) fun update_switchboard_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
+        let config = switchboard_parser::parse_config(config);
+        oracle.switchboard_config = config;
+    }
+
+    public fun is_valid_from_switchboard<T>(
+        oracle: &SingleOracle<T>,
         clock: &Clock,
         source: &Aggregator,
-    ): bool {
-        option::is_some(&oracle.switchboard_config) &&
-        option::borrow(&oracle.switchboard_config) == &object::id(source) &&
-        {
-            let (_, latest_timestamp) = switchboard_parser::parse_price(source, oracle.precision_decimal);
-            clock::timestamp_ms(clock) - latest_timestamp <= TOLERANCE_MS
+    ): (Option<u64>, u64) {
+        if (option::is_some(&oracle.switchboard_config))
+            return (option::some(ENoSourceConfig), 0);
+        if (option::borrow(&oracle.switchboard_config) == &object::id(source))
+            return (option::some(EWrongSourceConfig), 0);
+        let (price, latest_timestamp) = switchboard_parser::parse_price(source, oracle.precision_decimal);
+        if (clock::timestamp_ms(clock) - latest_timestamp <= TOLERANCE_MS) {
+            (option::none(), price)
+        } else {
+            (option::some(ESourceOutdated), price)
         }
     }
 
@@ -90,15 +104,58 @@ module bucket_oracle::single_oracle {
         oracle: &mut SingleOracle<T>,
         clock: &Clock,
         source: &Aggregator,
-        ctx: &TxContext
+        ctx: &TxContext,
     ) {
-        assert!(option::is_some(&oracle.switchboard_config), ENoSourceConfig);
-        assert!(option::borrow(&oracle.switchboard_config) == &object::id(source), EWrongSourceConfig);
-        let (price, latest_timestamp) = switchboard_parser::parse_price(source, oracle.precision_decimal);
-        let current_timestamp = clock::timestamp_ms(clock);
-        assert!(current_timestamp - latest_timestamp <= TOLERANCE_MS, ESourceOutdated);
+        let (error_code, price) = is_valid_from_switchboard(oracle, clock, source);
+        assert!(option::is_none(&error_code), option::destroy_some(error_code));
         oracle.price = price;
-        oracle.latest_update_ms = current_timestamp;
+        oracle.latest_update_ms = clock::timestamp_ms(clock);
+        oracle.epoch = tx_context::epoch(ctx);
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    //
+    //    Pyth
+    //
+    ////////////////////////////////////////////////////////////////////////
+    /// TODO
+
+    ////////////////////////////////////////////////////////////////////////
+    //
+    //    Supra
+    //
+    ////////////////////////////////////////////////////////////////////////
+
+    public(friend) fun update_supra_config<T>(oracle: &mut SingleOracle<T>, config: Option<u32>) {
+        oracle.supra_config = config;
+    }
+
+    public fun is_valid_from_supra<T>(
+        oracle: &SingleOracle<T>,
+        clock: &Clock,
+        source: &mut OracleHolder,
+    ): (Option<u64>, u64) {
+        if (option::is_some(&oracle.supra_config))
+            return (option::some(ENoSourceConfig), 0);
+        let pair_id = *option::borrow(&oracle.supra_config);
+        let (price, latest_timestamp) = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
+        if (clock::timestamp_ms(clock) - latest_timestamp <= TOLERANCE_MS) {
+            (option::none(), price)
+        } else {
+            (option::some(ESourceOutdated), price)
+        }
+    }
+
+    public fun update_price_from_supra<T>(
+        oracle: &mut SingleOracle<T>,
+        clock: &Clock,
+        source: &mut OracleHolder,
+        ctx: &TxContext,
+    ) {
+        let (error_code, price) = is_valid_from_supra(oracle, clock, source);
+        assert!(option::is_none(&error_code), option::destroy_some(error_code));
+        oracle.price = price;
+        oracle.latest_update_ms = clock::timestamp_ms(clock);
         oracle.epoch = tx_context::epoch(ctx);
     }
 

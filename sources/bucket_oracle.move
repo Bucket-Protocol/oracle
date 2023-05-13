@@ -25,6 +25,7 @@ module bucket_oracle::bucket_oracle {
             6,
             option::none(),
             vector::empty(),
+            option::none(),
             ctx
         );
         transfer::transfer(admin_cap, tx_context::sender(ctx));
@@ -41,6 +42,7 @@ module bucket_oracle::bucket_oracle {
         precision_decimal: u8,
         switchboard_config: Option<address>,
         pyth_config: vector<u8>,
+        supra_config: Option<u32>,
         ctx: &mut TxContext,
     ) {
         dof::add<PriceType<T>, SingleOracle<T>>(
@@ -50,6 +52,7 @@ module bucket_oracle::bucket_oracle {
                 precision_decimal,
                 switchboard_config,
                 pyth_config,
+                supra_config,
                 ctx
             ),
         );
@@ -96,6 +99,7 @@ module bucket_oracle::bucket_oracle {
             6,
             option::none(),
             vector::empty(),
+            option::none(),
             ctx
         );
         (oracle, admin_cap)
