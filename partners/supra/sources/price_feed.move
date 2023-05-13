@@ -1,4 +1,4 @@
-module supra::price_feed {
+module supra::SupraSValueFeed {
 
     struct OracleHolder has key, store {
         id: sui::object::UID,
