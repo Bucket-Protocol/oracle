@@ -1,9 +1,8 @@
-module supra::SupraSValueFeed {
+module SupraOracle::SupraSValueFeed {
 
     struct OracleHolder has key, store {
         id: sui::object::UID,
     }
-
     struct Price has drop {
         pair: u32,
         value: u128,
@@ -12,9 +11,9 @@ module supra::SupraSValueFeed {
         round: u64
     }
     
-    native public fun get_price(oracle_holder: &mut OracleHolder, pair: u32): (u128, u16, u128, u64);
+    native public fun get_price(_oracle_holder: &mut OracleHolder, _pair: u32) : (u128, u16, u128, u64);
     
-    native public fun get_prices(oracle_holder: &mut OracleHolder, pairs: vector<u32>): vector<Price>;
+    native public fun get_prices(_oracle_holder: &mut OracleHolder, _pairs: vector<u32>) : vector<Price>;
     
-    native public fun extract_price(price: &Price): (u32, u128, u16, u128, u64);
+    native public fun extract_price(_price: &Price) : (u32, u128, u16, u128, u64);
 }

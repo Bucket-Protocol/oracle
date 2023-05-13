@@ -7,7 +7,7 @@ module bucket_oracle::single_oracle {
     use std::option::{Self, Option};
 
     use switchboard_std::aggregator::Aggregator;
-    use supra::SupraSValueFeed::OracleHolder;
+    use SupraOracle::SupraSValueFeed::OracleHolder;
     use bucket_oracle::switchboard_parser;
     use bucket_oracle::pyth_parser;
     use bucket_oracle::supra_parser;
