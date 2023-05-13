@@ -1,7 +1,7 @@
 [package]
 name = "BucketOracle"
 version = "0.0.1"
-published-at = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85af"
+# published-at = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85af"
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
@@ -10,5 +10,5 @@ Pyth = { local = "./partners/pyth" }
 SupraOracle = { local = "./partners/supra" }
 
 [addresses]
-bucket_oracle = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85af"
+bucket_oracle = "0x0"
 sui =  "0000000000000000000000000000000000000000000000000000000000000002"
