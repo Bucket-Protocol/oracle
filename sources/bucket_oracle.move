@@ -67,6 +67,15 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_switchboard_config<T>(oracle, switchboard_config);
     }
 
+    public entry fun update_supra_config<T>(
+        _: &AdminCap,
+        bucket_oracle: &mut BucketOracle,
+        supra_config: Option<u32>,
+    ) {
+        let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+        single_oracle::update_supra_config<T>(oracle, supra_config);
+    }
+
     // only on testnet
     public entry fun update_price<T>(
         _: &AdminCap,
