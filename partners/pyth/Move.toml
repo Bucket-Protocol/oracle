@@ -8,7 +8,7 @@ subdir = "crates/sui-framework/packages/sui-framework"
 rev = "testnet"
 
 [dependencies.Wormhole]
-local = "../wormhole"
+local = "./wormhole"
 
 [addresses]
 pyth = "0xa446c4a37c0bb69d03357c1a52d60da0b434048226d5f3feffdb693586bea861"

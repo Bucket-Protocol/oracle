@@ -7,7 +7,6 @@ published-at = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
 SwitchboardStdLib = { local = "./partners/switchboard" }
 Pyth = { local = "./partners/pyth" }
-Wormhole = { local = "./partners/wormhole" }
 SupraOracle = { local = "./partners/supra" }
 
 [addresses]
