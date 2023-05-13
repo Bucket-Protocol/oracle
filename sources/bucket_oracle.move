@@ -25,7 +25,7 @@ module bucket_oracle::bucket_oracle {
             option::none(),
             option::none(),
             option::none(),
-            ctx
+            ctx,
         );
         transfer::transfer(admin_cap, tx_context::sender(ctx));
         transfer::share_object(oracle);
@@ -104,11 +104,11 @@ module bucket_oracle::bucket_oracle {
         create_single_oracle<SUI>(
             &admin_cap,
             &mut oracle,
-            6,
+            precision_decimal,
             option::none(),
             option::none(),
             option::none(),
-            ctx
+            ctx,
         );
         (oracle, admin_cap)
     }
