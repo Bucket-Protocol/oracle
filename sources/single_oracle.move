@@ -7,7 +7,6 @@ module bucket_oracle::single_oracle {
     use std::option::{Self, Option};
 
     use switchboard_std::aggregator::Aggregator;
-    use pyth::price_identifier::PriceIdentifier;
     use supra::price_feed::OracleHolder;
     use bucket_oracle::switchboard_parser;
     use bucket_oracle::pyth_parser;
@@ -33,14 +32,14 @@ module bucket_oracle::single_oracle {
         epoch: u64,
         // oracle configs
         switchboard_config: Option<ID>,
-        pyth_config: Option<PriceIdentifier>,
+        pyth_config: Option<ID>,
         supra_config: Option<u32>,
     }
 
     public(friend) fun new<T>(
         precision_decimal: u8,
         switchboard_config: Option<address>,
-        pyth_config: vector<u8>,
+        pyth_config: Option<address>,
         supra_config: Option<u32>,
         ctx: &mut TxContext,
     ): SingleOracle<T> {

@@ -7,7 +7,6 @@ module bucket_oracle::bucket_oracle {
     use sui::sui::SUI;
     use sui::clock::Clock;
     use std::option::{Self, Option};
-    use std::vector;
 
     use bucket_oracle::single_oracle::{Self, SingleOracle};
 
@@ -24,7 +23,7 @@ module bucket_oracle::bucket_oracle {
             &mut oracle,
             6,
             option::none(),
-            vector::empty(),
+            option::none(),
             option::none(),
             ctx
         );
@@ -41,7 +40,7 @@ module bucket_oracle::bucket_oracle {
         bucket_oracle: &mut BucketOracle,
         precision_decimal: u8,
         switchboard_config: Option<address>,
-        pyth_config: vector<u8>,
+        pyth_config: Option<address>,
         supra_config: Option<u32>,
         ctx: &mut TxContext,
     ) {
@@ -107,7 +106,7 @@ module bucket_oracle::bucket_oracle {
             &mut oracle,
             6,
             option::none(),
-            vector::empty(),
+            option::none(),
             option::none(),
             ctx
         );
