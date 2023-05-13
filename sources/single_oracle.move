@@ -59,8 +59,9 @@ module bucket_oracle::single_oracle {
         }
     }
 
-    public fun get_price<T>(oracle: &SingleOracle<T>, clock: &Clock): (u64, u64) {
-        assert!(clock::timestamp_ms(clock) - oracle.latest_update_ms <= TOLERANCE_MS, EPriceOutdated);
+    public fun get_price<T>(oracle: &SingleOracle<T>, _clock: &Clock): (u64, u64) {
+        // don't check on testnet
+        // assert!(clock::timestamp_ms(clock) - oracle.latest_update_ms <= TOLERANCE_MS, EPriceOutdated);
         (oracle.price, oracle.precision)
     }
 
