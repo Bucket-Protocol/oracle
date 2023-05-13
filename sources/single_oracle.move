@@ -7,10 +7,8 @@ module bucket_oracle::single_oracle {
     use std::option::{Self, Option};
 
     use switchboard_std::aggregator::Aggregator;
-    use SupraOracle::SupraSValueFeed::OracleHolder;
     use bucket_oracle::switchboard_parser;
     use bucket_oracle::pyth_parser;
-    use bucket_oracle::supra_parser;
 
     friend bucket_oracle::bucket_oracle;
 
@@ -118,46 +116,15 @@ module bucket_oracle::single_oracle {
     //    Pyth
     //
     ////////////////////////////////////////////////////////////////////////
-    /// TODO
+    // TODO
 
     ////////////////////////////////////////////////////////////////////////
     //
     //    Supra
     //
     ////////////////////////////////////////////////////////////////////////
+    // TODO
 
-    public(friend) fun update_supra_config<T>(oracle: &mut SingleOracle<T>, config: Option<u32>) {
-        oracle.supra_config = config;
-    }
-
-    public fun is_valid_from_supra<T>(
-        oracle: &SingleOracle<T>,
-        clock: &Clock,
-        source: &mut OracleHolder,
-    ): (Option<u64>, u64) {
-        if (option::is_some(&oracle.supra_config))
-            return (option::some(ENoSourceConfig), 0);
-        let pair_id = *option::borrow(&oracle.supra_config);
-        let (price, latest_timestamp) = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
-        if (clock::timestamp_ms(clock) - latest_timestamp <= TOLERANCE_MS) {
-            (option::none(), price)
-        } else {
-            (option::some(ESourceOutdated), price)
-        }
-    }
-
-    public fun update_price_from_supra<T>(
-        oracle: &mut SingleOracle<T>,
-        clock: &Clock,
-        source: &mut OracleHolder,
-        ctx: &TxContext,
-    ) {
-        let (error_code, price) = is_valid_from_supra(oracle, clock, source);
-        assert!(option::is_none(&error_code), option::destroy_some(error_code));
-        oracle.price = price;
-        oracle.latest_update_ms = clock::timestamp_ms(clock);
-        oracle.epoch = tx_context::epoch(ctx);
-    }
 
     #[test_only]
     public fun update_price_for_testing<T>(oracle: &mut SingleOracle<T>, price: u64) {
