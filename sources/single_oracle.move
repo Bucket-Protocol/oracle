@@ -46,12 +46,12 @@ module bucket_oracle::single_oracle {
 
     public(friend) fun new<T>(
         precision_decimal: u8,
-        switchboard_config: Option<address>,
+        _switchboard_config: Option<address>,
         pyth_config: Option<address>,
         supra_config: Option<u32>,
         ctx: &mut TxContext,
     ): SingleOracle<T> {
-        let switchboard_config = switchboard_parser::parse_config(switchboard_config);
+        // let switchboard_config = switchboard_parser::parse_config(switchboard_config);
         let pyth_config = pyth_parser::parse_config(pyth_config);
         SingleOracle {
             id: object::new(ctx),
@@ -60,7 +60,7 @@ module bucket_oracle::single_oracle {
             precision: math::pow(10, precision_decimal),
             latest_update_ms: 0,
             epoch: 0,
-            switchboard_config,
+            switchboard_config: option::none(),
             pyth_config,
             supra_config,
         }

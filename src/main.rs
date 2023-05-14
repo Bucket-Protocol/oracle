@@ -16,7 +16,7 @@ async fn main() -> Result<()> {
     let coin_type = dotenv::var("COIN_TYPE")?;
     let admin_cap_id = dotenv::var("ADMIN_CAP_ID")?;
     let oracle_id = dotenv::var("ORACLE_ID")?;
-    let clock_id = "0x0000000000000000000000000000000000000000000000000000000000000006";
+    let clock_id = String::from("0x0000000000000000000000000000000000000000000000000000000000000006");
 
     println!("Package ID: {}", &package_id);
     println!("Coin Type: {}", &coin_type);
@@ -40,7 +40,7 @@ async fn main() -> Result<()> {
     let coin_type = TypeTag::from_str(&coin_type)?;
     let admin_cap_id = ObjectID::from_hex_literal(&admin_cap_id)?;
     let oracle_id = ObjectID::from_hex_literal(&oracle_id)?;
-    let clock_id = ObjectID::from_hex_literal(clock_id)?;
+    let clock_id = ObjectID::from_hex_literal(&clock_id)?;
 
     let mut interval = time::interval(time::Duration::from_secs(10));
     let market: Market = Binance::new(None, None);
@@ -49,10 +49,11 @@ async fn main() -> Result<()> {
         interval.tick().await;
         match market.get_price("BTCUSDT").await {
             Ok(resp) => {
-                let price_u64 = (resp.price * 1_000.0) as u64;
+                println!("{}", resp.price);
+                let price_u64 = (resp.price * 1_000_000.0) as u64;
                 match call_move(
                     package_id,
-                    "oracle",
+                    "bucket_oracle",
                     "update_price",
                     vec![coin_type.clone()],
                     None,
