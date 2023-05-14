@@ -4,9 +4,19 @@ module bucket_oracle::single_oracle {
     use sui::tx_context::{Self, TxContext};
     use sui::clock::{Self, Clock};
     use sui::math;
+    use sui::coin::Coin;
+    use sui::sui::SUI;
     use std::option::{Self, Option};
 
+    // switchboard
     use switchboard_std::aggregator::Aggregator;
+
+    // pyth
+    use wormhole::state::{State as WormholeState};
+    use pyth::state::{State as PythState};
+    use pyth::price_info::PriceInfoObject;
+
+    // parsers
     use bucket_oracle::switchboard_parser;
     use bucket_oracle::pyth_parser;
 
@@ -116,7 +126,40 @@ module bucket_oracle::single_oracle {
     //    Pyth
     //
     ////////////////////////////////////////////////////////////////////////
-    // TODO
+
+    public(friend) fun update_pyth_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
+        let config = pyth_parser::parse_config(config);
+        oracle.pyth_config = config;
+    }
+
+    public fun is_valid_from_pyth<T>(oracle: &SingleOracle<T>, pyth_info_object: &PriceInfoObject): Option<u64> {
+        if (option::is_some(&oracle.pyth_config)) {
+            option::some(ENoSourceConfig)
+        } else if (option::borrow(&oracle.pyth_config) == &object::id(pyth_info_object)) {
+            option::some(EWrongSourceConfig)
+        } else {
+            option::none()
+        }
+    }
+
+    public fun update_price_from_pyth<T>(
+        oracle: &mut SingleOracle<T>,
+        clock: &Clock,
+        wormhole_state: &WormholeState,
+        pyth_state: &PythState,
+        price_info_object: &mut PriceInfoObject,
+        buf: vector<u8>,
+        fee: Coin<SUI>,
+        ctx: &TxContext,
+    ) {
+        let error_code = is_valid_from_pyth(oracle, price_info_object);
+        assert!(option::is_none(&error_code), option::destroy_some(error_code));
+        let (price, timestamp) = pyth_parser::parse_price(wormhole_state, pyth_state, clock, price_info_object, buf, fee, oracle.precision_decimal);
+        oracle.price = price;
+        oracle.latest_update_ms = timestamp;
+        oracle.epoch = tx_context::epoch(ctx);
+    }
+
 
     ////////////////////////////////////////////////////////////////////////
     //
