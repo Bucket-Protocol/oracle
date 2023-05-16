@@ -2,11 +2,11 @@
 Aggregate price from Switchboard, Pyth and Supra on Sui.
 
 ## Testnet
-Package ID, init_shared_version: `37`
+Package ID
 ```
 0xbc95dfa4450cd360868addde709c60875eeb667c59d47ed7811880776adf96fb
 ```
-Oracle Object ID, init_shared_version: `37`
+Bucket Oracle ID, init_shared_version: `37`
 ```
 0xff459a65463a4ed60f722b1e188092ca51dc51149c90827df37392fe09105eef
 ```
