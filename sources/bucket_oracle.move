@@ -92,7 +92,7 @@ module bucket_oracle::bucket_oracle {
     #[test_only]
     public fun new_for_testing<T>(precision_decimal: u8, ctx: &mut TxContext): (BucketOracle, AdminCap) {
         let (oracle, admin_cap) = new_oracle(ctx);
-        create_single_oracle<SUI>(
+        create_single_oracle<T>(
             &admin_cap,
             &mut oracle,
             precision_decimal,
@@ -102,6 +102,22 @@ module bucket_oracle::bucket_oracle {
             ctx,
         );
         (oracle, admin_cap)
+    }
+
+    #[test_only]
+    public fun share_for_testing<T>(precision_decimal: u8, admin: address, ctx: &mut TxContext) {
+        let (oracle, admin_cap) = new_oracle(ctx);
+        create_single_oracle<T>(
+            &admin_cap,
+            &mut oracle,
+            precision_decimal,
+            option::none(),
+            option::none(),
+            option::none(),
+            ctx,
+        );
+        transfer::share_object(oracle);
+        transfer::transfer(admin_cap, admin);
     }
 
     #[test_only]
