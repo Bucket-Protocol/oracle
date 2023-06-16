@@ -5,7 +5,7 @@ module bucket_oracle::price_aggregator {
     use sui::math::diff;
     use sui::clock::{Self, Clock};
 
-    const TOLERANCE_OF_UPDATE_TIME: u64 = 10000;
+    const TOLERANCE_OF_UPDATE_TIME: u64 = 500_000;
     const TOLERANCE_OF_PRICE_DIFF: u64 = 100;
 
     const ENotEoughPrices: u64 = 0;

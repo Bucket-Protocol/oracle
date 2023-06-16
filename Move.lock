@@ -8,11 +8,12 @@ dependencies = [
   { name = "Sui" },
   { name = "SupraOracle" },
   { name = "SwitchboardStdLib" },
+  { name = "TestnetCoins" },
 ]
 
 [[move.package]]
 name = "MoveStdlib"
-source = { git = "https://github.com/MystenLabs/sui.git", rev = "testnet", subdir = "crates/sui-framework/packages/move-stdlib" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/testnet", subdir = "crates/sui-framework/packages/move-stdlib" }
 
 [[move.package]]
 name = "Pyth"
@@ -25,7 +26,7 @@ dependencies = [
 
 [[move.package]]
 name = "Sui"
-source = { git = "https://github.com/MystenLabs/sui.git", rev = "testnet", subdir = "crates/sui-framework/packages/sui-framework" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/testnet", subdir = "crates/sui-framework/packages/sui-framework" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -45,6 +46,14 @@ source = { local = "partners/switchboard" }
 
 dependencies = [
   { name = "MoveStdlib" },
+  { name = "Sui" },
+]
+
+[[move.package]]
+name = "TestnetCoins"
+source = { git = "https://github.com/Bucket-Protocol/testnet-coins.git", rev = "main", subdir = "" }
+
+dependencies = [
   { name = "Sui" },
 ]
 
