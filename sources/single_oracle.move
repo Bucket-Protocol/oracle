@@ -1,12 +1,13 @@
 module bucket_oracle::single_oracle {
 
     use sui::object::{Self, ID, UID};
-    use sui::tx_context::{Self, TxContext};
+    use sui::tx_context::TxContext;
     use sui::clock::{Self, Clock};
     use sui::math;
     use sui::coin::Coin;
     use sui::sui::SUI;
     use std::option::{Self, Option};
+    use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
     // switchboard
     use switchboard_std::aggregator::Aggregator;
@@ -16,18 +17,21 @@ module bucket_oracle::single_oracle {
     use pyth::state::{State as PythState};
     use pyth::price_info::PriceInfoObject;
 
+    // supra
+    use SupraOracle::SupraSValueFeed::OracleHolder;
+
     // parsers
     use bucket_oracle::switchboard_parser;
     use bucket_oracle::pyth_parser;
+    use bucket_oracle::supra_parser;
 
     friend bucket_oracle::bucket_oracle;
 
-    const TOLERANCE_MS: u64 = 5000;
+    const TOLERANCE_MS_OF_GET_PRICE: u64 = 5000;
 
     const ENoSourceConfig: u64 = 0;
     const EWrongSourceConfig: u64 = 1;
     const EPriceOutdated: u64 = 2;
-    const ESourceOutdated: u64 = 3;
 
     struct SingleOracle<phantom T> has key, store {
         id: UID,
@@ -37,21 +41,26 @@ module bucket_oracle::single_oracle {
         precision: u64,
         // recordings
         latest_update_ms: u64,
-        epoch: u64,
         // oracle configs
         switchboard_config: Option<ID>,
         pyth_config: Option<ID>,
         supra_config: Option<u32>,
     }
 
+    struct PriceCollector<phantom T> {
+        switchboard_result: Option<PriceInfo>,
+        pyth_result: Option<PriceInfo>,
+        supra_result: Option<PriceInfo>,
+    }
+
     public(friend) fun new<T>(
         precision_decimal: u8,
-        _switchboard_config: Option<address>,
+        switchboard_config: Option<address>,
         pyth_config: Option<address>,
         supra_config: Option<u32>,
         ctx: &mut TxContext,
     ): SingleOracle<T> {
-        // let switchboard_config = switchboard_parser::parse_config(switchboard_config);
+        let switchboard_config = switchboard_parser::parse_config(switchboard_config);
         let pyth_config = pyth_parser::parse_config(pyth_config);
         SingleOracle {
             id: object::new(ctx),
@@ -59,25 +68,15 @@ module bucket_oracle::single_oracle {
             precision_decimal,
             precision: math::pow(10, precision_decimal),
             latest_update_ms: 0,
-            epoch: 0,
-            switchboard_config: option::none(),
+            switchboard_config,
             pyth_config,
             supra_config,
         }
     }
 
-    public fun get_price<T>(oracle: &SingleOracle<T>, _clock: &Clock): (u64, u64) {
-        // don't check on testnet
-        // assert!(clock::timestamp_ms(clock) - oracle.latest_update_ms <= TOLERANCE_MS, EPriceOutdated);
+    public fun get_price<T>(oracle: &SingleOracle<T>, clock: &Clock): (u64, u64) {
+        assert!(clock::timestamp_ms(clock) - oracle.latest_update_ms <= TOLERANCE_MS_OF_GET_PRICE, EPriceOutdated);
         (oracle.price, oracle.precision)
-    }
-
-    public fun get_tolerance_ms(): u64 { TOLERANCE_MS }
-
-    // only on testnet
-    public(friend) fun update_price_from_admin<T>(oracle: &mut SingleOracle<T>, clock: &Clock, price: u64) {
-        oracle.price = price;
-        oracle.latest_update_ms = clock::timestamp_ms(clock);
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -91,34 +90,16 @@ module bucket_oracle::single_oracle {
         oracle.switchboard_config = config;
     }
 
-    public fun is_valid_from_switchboard<T>(
+    public fun collect_price_from_switchboard<T>(
         oracle: &SingleOracle<T>,
-        clock: &Clock,
+        // collector
+        price_collector: &mut PriceCollector<T>,
+        // switchboard input
         source: &Aggregator,
-    ): (Option<u64>, u64) {
-        if (option::is_some(&oracle.switchboard_config))
-            return (option::some(ENoSourceConfig), 0);
-        if (option::borrow(&oracle.switchboard_config) == &object::id(source))
-            return (option::some(EWrongSourceConfig), 0);
-        let (price, latest_timestamp) = switchboard_parser::parse_price(source, oracle.precision_decimal);
-        if (clock::timestamp_ms(clock) - latest_timestamp <= TOLERANCE_MS) {
-            (option::none(), price)
-        } else {
-            (option::some(ESourceOutdated), price)
-        }
-    }
-
-    public fun update_price_from_switchboard<T>(
-        oracle: &mut SingleOracle<T>,
-        clock: &Clock,
-        source: &Aggregator,
-        ctx: &TxContext,
     ) {
-        let (error_code, price) = is_valid_from_switchboard(oracle, clock, source);
-        assert!(option::is_none(&error_code), option::destroy_some(error_code));
-        oracle.price = price;
-        oracle.latest_update_ms = clock::timestamp_ms(clock);
-        oracle.epoch = tx_context::epoch(ctx);
+        assert!(option::is_some(&oracle.switchboard_config), ENoSourceConfig);
+        assert!(option::borrow(&oracle.switchboard_config) == &object::id(source), EWrongSourceConfig);
+        price_collector.switchboard_result = switchboard_parser::parse_price(source, oracle.precision_decimal);
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -132,42 +113,73 @@ module bucket_oracle::single_oracle {
         oracle.pyth_config = config;
     }
 
-    public fun is_valid_from_pyth<T>(oracle: &SingleOracle<T>, pyth_info_object: &PriceInfoObject): Option<u64> {
-        if (option::is_some(&oracle.pyth_config)) {
-            option::some(ENoSourceConfig)
-        } else if (option::borrow(&oracle.pyth_config) == &object::id(pyth_info_object)) {
-            option::some(EWrongSourceConfig)
-        } else {
-            option::none()
-        }
-    }
-
-    public fun update_price_from_pyth<T>(
-        oracle: &mut SingleOracle<T>,
+    public fun collect_price_from_pyth<T>(
+        oracle: &SingleOracle<T>,
+        // collector
+        price_collector: &mut PriceCollector<T>,
+        // pyth inputs
         clock: &Clock,
         wormhole_state: &WormholeState,
         pyth_state: &PythState,
         price_info_object: &mut PriceInfoObject,
         buf: vector<u8>,
         fee: Coin<SUI>,
-        ctx: &TxContext,
     ) {
-        let error_code = is_valid_from_pyth(oracle, price_info_object);
-        assert!(option::is_none(&error_code), option::destroy_some(error_code));
-        let (price, timestamp) = pyth_parser::parse_price(wormhole_state, pyth_state, clock, price_info_object, buf, fee, oracle.precision_decimal);
-        oracle.price = price;
-        oracle.latest_update_ms = timestamp;
-        oracle.epoch = tx_context::epoch(ctx);
+        assert!(option::is_some(&oracle.pyth_config), ENoSourceConfig);
+        assert!(option::borrow(&oracle.pyth_config) == &object::id(price_info_object), EWrongSourceConfig);
+        price_collector.pyth_result = pyth_parser::parse_price(wormhole_state, pyth_state, clock, price_info_object, buf, fee, oracle.precision_decimal);
     }
-
 
     ////////////////////////////////////////////////////////////////////////
     //
     //    Supra
     //
     ////////////////////////////////////////////////////////////////////////
-    // TODO
 
+    public(friend) fun update_supra_config<T>(oracle: &mut SingleOracle<T>, config: Option<u32>) {
+        oracle.supra_config = config;
+    }
+
+    public fun collect_price_from_supra<T>(
+        oracle: &SingleOracle<T>,
+        // collector
+        price_collector: &mut PriceCollector<T>,
+        // supra inputs
+        source: &OracleHolder,
+        pair_id: u32,
+    ) {
+        assert!(option::is_some(&oracle.supra_config), ENoSourceConfig);
+        assert!(*option::borrow(&oracle.supra_config) == pair_id, EWrongSourceConfig);
+        price_collector.supra_result = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
+    }
+
+    ////////////////////////////////////////////////////////////////////////
+    //
+    //    Aggregate
+    //
+    ////////////////////////////////////////////////////////////////////////
+
+    public fun issue_price_collector<T>(): PriceCollector<T> {
+        PriceCollector {
+            switchboard_result: option::none(),
+            pyth_result: option::none(),
+            supra_result: option::none(),    
+        }
+    }
+
+    public fun update_oracle_price<T>(
+        single_oracle: &mut SingleOracle<T>,
+        clock: &Clock,
+        price_collector: PriceCollector<T>,
+    ) {
+        let price_info_vec = vector<PriceInfo>[];
+        let PriceCollector { switchboard_result, pyth_result, supra_result } = price_collector;
+        price_aggregator::push_price(&mut price_info_vec, switchboard_result);
+        price_aggregator::push_price(&mut price_info_vec, pyth_result);
+        price_aggregator::push_price(&mut price_info_vec, supra_result);
+        single_oracle.price = price_aggregator::aggregate_price(clock, price_info_vec);
+        single_oracle.latest_update_ms = clock::timestamp_ms(clock);
+    }
 
     #[test_only]
     public fun update_price_for_testing<T>(oracle: &mut SingleOracle<T>, price: u64) {

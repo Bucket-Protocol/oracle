@@ -13,11 +13,10 @@ Cargo.lock
 build/
 
 # Added by cargo
-
 /target
 
 # IntelliJ IDEA
 .idea/
 
-# sui log
+# Sui
 sui.log*

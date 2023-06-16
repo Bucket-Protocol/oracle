@@ -14,6 +14,7 @@ module bucket_oracle::pyth_parser {
     use sui::coin::Coin;
     use sui::sui::SUI;
     use sui::math::pow;
+    use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
     const EInvalidPriceDecimal: u64 = 0;
     const EInvalidPriceValue: u64 = 0;
@@ -26,7 +27,7 @@ module bucket_oracle::pyth_parser {
         buf: vector<u8>,
         fee: Coin<SUI>,
         required_decimal: u8,
-    ): (u64, u64) {
+    ): Option<PriceInfo> {
         let vaa = vaa::parse_and_verify(wormhole_state, buf, clock);
         let price_info_potatos = pyth::create_price_infos_hot_potato(pyth_state, vector[vaa], clock);
         let price_info_potatos = pyth::update_single_price_feed(pyth_state, price_info_potatos, price_info_object, fee, clock);
@@ -35,8 +36,8 @@ module bucket_oracle::pyth_parser {
         let decimal_i64 = price::get_expo(&price_struct);
         let price_i64 = price::get_price(&price_struct);
         let timestamp = price::get_timestamp(&price_struct);
-        assert!(i64::get_is_negative(&decimal_i64), EInvalidPriceDecimal);
-        assert!(!i64::get_is_negative(&price_i64), EInvalidPriceDecimal);
+        if (i64::get_is_negative(&decimal_i64)) return option::none();
+        if (!i64::get_is_negative(&price_i64)) return option::none();
         let decimal_u8 = (i64::get_magnitude_if_negative(&decimal_i64) as u8);
         let price_u64 = (i64::get_magnitude_if_positive(&price_i64));
 
@@ -46,7 +47,7 @@ module bucket_oracle::pyth_parser {
             price_u64 = price_u64 * pow(10, required_decimal - decimal_u8);
         };
 
-        (price_u64, timestamp)
+        option::some(price_aggregator::new(price_u64, timestamp))
     }
 
     public fun parse_config(config: Option<address>): Option<ID> {
