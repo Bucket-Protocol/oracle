@@ -6,8 +6,17 @@ module bucket_oracle::single_oracle {
     use sui::math;
     use sui::coin::Coin;
     use sui::sui::SUI;
+    use sui::event;
     use std::option::{Self, Option};
+    use std::ascii::String;
+    use std::type_name;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
+
+    struct ParsePriceEvent has drop, copy {
+        coin_type: String,
+        source_id: u8,
+        price_info: Option<PriceInfo>,
+    }
 
     // switchboard
     use switchboard_std::aggregator::Aggregator;
@@ -99,7 +108,10 @@ module bucket_oracle::single_oracle {
     ) {
         assert!(option::is_some(&oracle.switchboard_config), ENoSourceConfig);
         assert!(option::borrow(&oracle.switchboard_config) == &object::id(source), EWrongSourceConfig);
-        price_collector.switchboard_result = switchboard_parser::parse_price(source, oracle.precision_decimal);
+        let price_info = switchboard_parser::parse_price(source, oracle.precision_decimal);
+        let coin_type = type_name::into_string(type_name::get<T>());
+        event::emit(ParsePriceEvent { coin_type, source_id: 0, price_info });
+        price_collector.switchboard_result = price_info;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -127,7 +139,10 @@ module bucket_oracle::single_oracle {
     ) {
         assert!(option::is_some(&oracle.pyth_config), ENoSourceConfig);
         assert!(option::borrow(&oracle.pyth_config) == &object::id(price_info_object), EWrongSourceConfig);
-        price_collector.pyth_result = pyth_parser::parse_price(wormhole_state, pyth_state, clock, price_info_object, buf, fee, oracle.precision_decimal);
+        let price_info = pyth_parser::parse_price(wormhole_state, pyth_state, clock, price_info_object, buf, fee, oracle.precision_decimal);
+        let coin_type = type_name::into_string(type_name::get<T>());
+        event::emit(ParsePriceEvent { coin_type, source_id: 1, price_info});
+        price_collector.pyth_result = price_info;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -150,7 +165,10 @@ module bucket_oracle::single_oracle {
     ) {
         assert!(option::is_some(&oracle.supra_config), ENoSourceConfig);
         assert!(*option::borrow(&oracle.supra_config) == pair_id, EWrongSourceConfig);
-        price_collector.supra_result = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
+        let price_info = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
+        let coin_type = type_name::into_string(type_name::get<T>());
+        event::emit(ParsePriceEvent { coin_type, source_id: 2, price_info });
+        price_collector.supra_result = price_info;
     }
 
     ////////////////////////////////////////////////////////////////////////

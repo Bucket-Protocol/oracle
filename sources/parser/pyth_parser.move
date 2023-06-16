@@ -16,9 +16,6 @@ module bucket_oracle::pyth_parser {
     use sui::math::pow;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
-    const EInvalidPriceDecimal: u64 = 0;
-    const EInvalidPriceValue: u64 = 0;
-
     public fun parse_price(
         wormhole_state: &WormholeState,
         pyth_state: &PythState,
@@ -39,15 +36,15 @@ module bucket_oracle::pyth_parser {
         if (i64::get_is_negative(&decimal_i64)) return option::none();
         if (!i64::get_is_negative(&price_i64)) return option::none();
         let decimal_u8 = (i64::get_magnitude_if_negative(&decimal_i64) as u8);
-        let price_u64 = (i64::get_magnitude_if_positive(&price_i64));
+        let price = (i64::get_magnitude_if_positive(&price_i64));
 
         if (decimal_u8 > required_decimal) {
-            price_u64 = price_u64 / pow(10, decimal_u8 - required_decimal);
+            price = price / pow(10, decimal_u8 - required_decimal);
         } else {
-            price_u64 = price_u64 * pow(10, required_decimal - decimal_u8);
+            price = price * pow(10, required_decimal - decimal_u8);
         };
 
-        option::some(price_aggregator::new(price_u64, timestamp))
+        option::some(price_aggregator::new(price, timestamp))
     }
 
     public fun parse_config(config: Option<address>): Option<ID> {
