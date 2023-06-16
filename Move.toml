@@ -1,7 +1,6 @@
 [package]
 name = "BucketOracle"
 version = "0.0.1"
-# published-at = "0xdea30c04331a4fe5a04cbd4acafdf9d774d022c6787aa3b160d667419e1e85af"
 published-at = "0xbc95dfa4450cd360868addde709c60875eeb667c59d47ed7811880776adf96fb" # init_shared_version: 37
 
 [dependencies]

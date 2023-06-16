@@ -51,12 +51,17 @@ module bucket_oracle::price_aggregator {
     }
 
     fun process_prices(prices: vector<u64>): u64 {
-        assert!(vector::length(&prices) >= 1, ENotEoughPrices);
+        let prices_len = vector::length(&prices);
+        assert!(prices_len >= 1, ENotEoughPrices);
         event::emit(PriceVector { vec: prices });
-        let price_0 = *vector::borrow(&prices, 0);
-        let price_1 = *vector::borrow(&prices, 1);
-        let avg_price = (price_0 + price_1) / 2;
-        assert!(diff(price_0, price_1) * TOLERANCE_OF_PRICE_DIFF <= avg_price, ESignificientPriceDiff);
-        avg_price
+        if (prices_len == 1) {
+            *vector::borrow(&prices, 0)
+        } else {
+            let price_0 = *vector::borrow(&prices, 0);
+            let price_1 = *vector::borrow(&prices, 1);
+            let avg_price = (price_0 + price_1) / 2;
+            assert!(diff(price_0, price_1) * TOLERANCE_OF_PRICE_DIFF <= avg_price, ESignificientPriceDiff);
+            avg_price
+        }
     }
 }
