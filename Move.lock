@@ -6,6 +6,7 @@ version = 0
 dependencies = [
   { name = "Pyth" },
   { name = "Sui" },
+  { name = "SupraOracle" },
   { name = "SwitchboardStdLib" },
 ]
 
@@ -28,6 +29,14 @@ source = { git = "https://github.com/MystenLabs/sui.git", rev = "testnet", subdi
 
 dependencies = [
   { name = "MoveStdlib" },
+]
+
+[[move.package]]
+name = "SupraOracle"
+source = { local = "partners/supra" }
+
+dependencies = [
+  { name = "Sui" },
 ]
 
 [[move.package]]

@@ -9,6 +9,9 @@ module bucket_oracle::bucket_oracle {
     use std::option::{Self, Option};
 
     use bucket_oracle::single_oracle::{Self, SingleOracle};
+    use switchboard_std::aggregator::Aggregator;
+    use SupraOracle::SupraSValueFeed::OracleHolder;
+
 
     struct AdminCap has key { id: UID }
 
@@ -66,17 +69,6 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_switchboard_config<T>(oracle, switchboard_config);
     }
 
-    // only on testnet
-    public entry fun update_price<T>(
-        _: &AdminCap,
-        bucket_oracle: &mut BucketOracle,
-        clock: &Clock,
-        price: u64,
-    ) {
-        let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        single_oracle::update_price_from_admin<T>(oracle, clock, price);
-    }
-
     public fun get_price<T>(bucket_oracle: &BucketOracle, clock: &Clock): (u64, u64) {
         single_oracle::get_price<T>(borrow_single_oracle(bucket_oracle), clock)
     }
@@ -87,6 +79,20 @@ module bucket_oracle::bucket_oracle {
 
     public fun borrow_single_oracle_mut<T>(bucket_oracle: &mut BucketOracle): &mut SingleOracle<T> {
         dof::borrow_mut<PriceType<T>, SingleOracle<T>>(&mut bucket_oracle.id, PriceType<T> {})
+    }
+
+    public entry fun update_price<T>(
+        bucket_oracle: &mut BucketOracle,
+        clock: &Clock,
+        switchboard_source: &Aggregator,
+        supra_source: &OracleHolder,
+        pair_id: u32,
+    ) {
+        let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+        let price_collector = single_oracle::issue_price_collector<T>();
+        single_oracle::collect_price_from_switchboard(single_oracle, &mut price_collector, switchboard_source);
+        single_oracle::collect_price_from_supra(single_oracle, &mut price_collector, supra_source, pair_id);
+        single_oracle::update_oracle_price(single_oracle, clock, price_collector);
     }
 
     #[test_only]

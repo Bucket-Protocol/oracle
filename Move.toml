@@ -7,6 +7,7 @@ version = "0.0.1"
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
 SwitchboardStdLib = { local = "./partners/switchboard" }
 Pyth = { local = "./partners/pyth" }
+SupraOracle = { local = "./partners/supra" }
 
 [addresses]
 bucket_oracle = "0x0"
