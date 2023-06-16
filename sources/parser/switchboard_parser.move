@@ -21,8 +21,8 @@ module bucket_oracle::switchboard_parser {
     }
 
     public fun parse_price(feed: &Aggregator, required_decimal: u8): Option<PriceInfo> {
-        let (price_u128, decimal, latest_timestamp) = extract_aggregator_info(feed);
-        if (price_u128 > 0) return option::none();
+        let (price_u128, decimal, timestamp) = extract_aggregator_info(feed);
+        if (price_u128 == 0) return option::none();
 
         if (decimal > required_decimal) {
             price_u128 = price_u128 / (pow(10, decimal - required_decimal) as u128);
@@ -30,7 +30,9 @@ module bucket_oracle::switchboard_parser {
             price_u128 = price_u128 * (pow(10, required_decimal - decimal) as u128);
         };
 
-        option::some(price_aggregator::new((price_u128 as u64), latest_timestamp))
+        let price = (price_u128 as u64);
+
+        option::some(price_aggregator::new(price, timestamp))
     }
 
     public fun parse_config(config: Option<address>): Option<ID> {
