@@ -158,6 +158,22 @@ module bucket_oracle::bucket_oracle {
     }
 
     #[test_only]
+    public fun share_for_testing<T>(precision_decimal: u8, admin: address, ctx: &mut TxContext) {
+        let (oracle, admin_cap) = new_oracle(ctx);
+        create_single_oracle<T>(
+            &admin_cap,
+            &mut oracle,
+            precision_decimal,
+            option::none(),
+            option::none(),
+            option::none(),
+            ctx,
+        );
+        transfer::share_object(oracle);
+        transfer::transfer(admin_cap, admin);
+    }
+
+    #[test_only]
     public fun update_price_for_testing<T>(bucket_oracle: &mut BucketOracle, price: u64) {
         let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
         single_oracle::update_price_for_testing(oracle, price);
