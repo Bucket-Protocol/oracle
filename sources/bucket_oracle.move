@@ -7,7 +7,6 @@ module bucket_oracle::bucket_oracle {
     use sui::sui::SUI;
     use sui::clock::Clock;
     use std::option::{Self, Option};
-    use std::type_name;
 
     use bucket_oracle::single_oracle::{Self, SingleOracle};
     use switchboard_std::aggregator::Aggregator;

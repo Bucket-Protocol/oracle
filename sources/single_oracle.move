@@ -8,7 +8,7 @@ module bucket_oracle::single_oracle {
     use sui::sui::SUI;
     use sui::event;
     use std::option::{Self, Option};
-    use std::ascii::String;
+    use std::ascii::{Self, String};
     use std::type_name;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
@@ -195,7 +195,12 @@ module bucket_oracle::single_oracle {
         price_aggregator::push_price(&mut price_info_vec, switchboard_result);
         price_aggregator::push_price(&mut price_info_vec, pyth_result);
         price_aggregator::push_price(&mut price_info_vec, supra_result);
-        single_oracle.price = price_aggregator::aggregate_price(clock, price_info_vec);
+        let agg_price = price_aggregator::aggregate_price(clock, price_info_vec);
+        // TODO: only boost SUI price on testnet for testing
+        if (ascii::into_bytes(type_name::get_module(&type_name::get<T>())) == b"sui") {
+            agg_price = agg_price * 10000;
+        };
+        single_oracle.price = agg_price;
         single_oracle.latest_update_ms = clock::timestamp_ms(clock);
     }
 
