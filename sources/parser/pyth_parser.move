@@ -32,7 +32,7 @@ module bucket_oracle::pyth_parser {
         let price_struct = pyth::get_price(pyth_state, price_info_object, clock);
         let decimal_i64 = price::get_expo(&price_struct);
         let price_i64 = price::get_price(&price_struct);
-        let timestamp = price::get_timestamp(&price_struct);
+        let timestamp_sec = price::get_timestamp(&price_struct);
         if (i64::get_is_negative(&decimal_i64)) return option::none();
         if (!i64::get_is_negative(&price_i64)) return option::none();
         let decimal_u8 = (i64::get_magnitude_if_negative(&decimal_i64) as u8);
@@ -43,6 +43,7 @@ module bucket_oracle::pyth_parser {
         } else {
             price = price * pow(10, required_decimal - decimal_u8);
         };
+        let timestamp = timestamp_sec * 1000;
 
         option::some(price_aggregator::new(price, timestamp))
     }
