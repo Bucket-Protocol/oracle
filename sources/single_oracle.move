@@ -36,7 +36,7 @@ module bucket_oracle::single_oracle {
 
     friend bucket_oracle::bucket_oracle;
 
-    const TOLERANCE_MS_OF_GET_PRICE: u64 = 5000;
+    const TOLERANCE_MS_OF_GET_PRICE: u64 = 10000;
 
     const ENoSourceConfig: u64 = 0;
     const EWrongSourceConfig: u64 = 1;
@@ -48,6 +48,7 @@ module bucket_oracle::single_oracle {
         // settings
         precision_decimal: u8,
         precision: u64,
+        tolerance_ms: u64,
         // recordings
         latest_update_ms: u64,
         // oracle configs
@@ -64,6 +65,7 @@ module bucket_oracle::single_oracle {
 
     public(friend) fun new<T>(
         precision_decimal: u8,
+        tolerance_ms: u64,
         switchboard_config: Option<address>,
         pyth_config: Option<address>,
         supra_config: Option<u32>,
@@ -75,6 +77,7 @@ module bucket_oracle::single_oracle {
             id: object::new(ctx),
             price: 0,
             precision_decimal,
+            tolerance_ms,
             precision: math::pow(10, precision_decimal),
             latest_update_ms: 0,
             switchboard_config,
@@ -195,7 +198,7 @@ module bucket_oracle::single_oracle {
         price_aggregator::push_price(&mut price_info_vec, switchboard_result);
         price_aggregator::push_price(&mut price_info_vec, pyth_result);
         price_aggregator::push_price(&mut price_info_vec, supra_result);
-        let agg_price = price_aggregator::aggregate_price(clock, price_info_vec);
+        let agg_price = price_aggregator::aggregate_price(clock, price_info_vec, single_oracle.tolerance_ms);
         // TODO: only boost SUI price on testnet for testing
         if (ascii::into_bytes(type_name::get_module(&type_name::get<T>())) == b"sui") {
             agg_price = agg_price * 10000;

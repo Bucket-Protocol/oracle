@@ -6,7 +6,8 @@ module bucket_oracle::price_aggregator {
     use sui::event;
     use sui::clock::{Self, Clock};
 
-    const TOLERANCE_OF_UPDATE_TIME: u64 = 500_000;
+    friend bucket_oracle::single_oracle;
+
     const TOLERANCE_OF_PRICE_DIFF: u64 = 50;
 
     const ENotEoughPrices: u64 = 0;
@@ -37,13 +38,13 @@ module bucket_oracle::price_aggregator {
         };
     }
 
-    public fun aggregate_price(clock: &Clock, price_vec: vector<PriceInfo>): u64 {
+    public(friend) fun aggregate_price(clock: &Clock, price_vec: vector<PriceInfo>, tolerance_ms: u64): u64 {
         let price_outputs = vector<u64>[];
         let current_time = clock::timestamp_ms(clock);
         while (!vector::is_empty(&price_vec)) {
             let price_info = vector::pop_back(&mut price_vec);
             let PriceInfo { price, timestamp } = price_info;
-            if (diff(current_time, timestamp) <= TOLERANCE_OF_UPDATE_TIME) {
+            if (diff(current_time, timestamp) <= tolerance_ms) {
                 vector::push_back(&mut price_outputs, price);
             };
         };

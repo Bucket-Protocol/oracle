@@ -12,6 +12,8 @@ module bucket_oracle::bucket_oracle {
     use switchboard_std::aggregator::Aggregator;
     use SupraOracle::SupraSValueFeed::OracleHolder;
 
+    const MAX_U64: u64 = 0xffffffffffffffff;
+
     // Testnet Coin Types
     use testnet_coins::wbtc::WBTC;
     use testnet_coins::weth::WETH;
@@ -55,6 +57,7 @@ module bucket_oracle::bucket_oracle {
             &admin_cap,
             &mut oracle,
             6,
+            3600_000,
             option::some(SUI_SWITCHBOARD_CONFIG),
             option::some(SUI_PYTH_CONFIG),
             option::some(SUI_SUPRA_CONFIG),
@@ -64,6 +67,7 @@ module bucket_oracle::bucket_oracle {
             &admin_cap,
             &mut oracle,
             2,
+            3600_000,
             option::some(BTC_SWITCHBOARD_CONFIG),
             option::some(BTC_PYTH_CONFIG),
             option::some(BTC_SUPRA_CONFIG),
@@ -73,6 +77,7 @@ module bucket_oracle::bucket_oracle {
             &admin_cap,
             &mut oracle,
             3,
+            3600_000,
             option::some(ETH_SWITCHBOARD_CONFIG),
             option::some(ETH_PYTH_CONFIG),
             option::some(ETH_SUPRA_CONFIG),
@@ -82,6 +87,7 @@ module bucket_oracle::bucket_oracle {
             &admin_cap,
             &mut oracle,
             6,
+            MAX_U64,
             option::some(USDT_SWITCHBOARD_CONFIG),
             option::some(USDT_PYTH_CONFIG),
             option::some(USDT_SUPRA_CONFIG),
@@ -91,6 +97,7 @@ module bucket_oracle::bucket_oracle {
             &admin_cap,
             &mut oracle,
             6,
+            MAX_U64,
             option::some(USDC_SWITCHBOARD_CONFIG),
             option::some(USDC_PYTH_CONFIG),
             option::some(USDC_SUPRA_CONFIG),
@@ -109,6 +116,7 @@ module bucket_oracle::bucket_oracle {
         _: &AdminCap,
         bucket_oracle: &mut BucketOracle,
         precision_decimal: u8,
+        tolerance_ms: u64,
         switchboard_config: Option<address>,
         pyth_config: Option<address>,
         supra_config: Option<u32>,
@@ -119,6 +127,7 @@ module bucket_oracle::bucket_oracle {
             PriceType<T> {}, 
             single_oracle::new(
                 precision_decimal,
+                tolerance_ms,
                 switchboard_config,
                 pyth_config,
                 supra_config,
@@ -187,6 +196,7 @@ module bucket_oracle::bucket_oracle {
             &admin_cap,
             &mut oracle,
             precision_decimal,
+             MAX_U64,
             option::none(),
             option::none(),
             option::none(),
@@ -202,6 +212,7 @@ module bucket_oracle::bucket_oracle {
             &admin_cap,
             &mut oracle,
             precision_decimal,
+            MAX_U64,
             option::none(),
             option::none(),
             option::none(),
