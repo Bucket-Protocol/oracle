@@ -38,7 +38,7 @@ module bucket_oracle::price_aggregator {
         };
     }
 
-    public(friend) fun aggregate_price(clock: &Clock, price_vec: vector<PriceInfo>, tolerance_ms: u64): u64 {
+    public(friend) fun aggregate_price(clock: &Clock, price_vec: vector<PriceInfo>, tolerance_ms: u64, threshold: u64): u64 {
         let price_outputs = vector<u64>[];
         let current_time = clock::timestamp_ms(clock);
         while (!vector::is_empty(&price_vec)) {
@@ -48,12 +48,12 @@ module bucket_oracle::price_aggregator {
                 vector::push_back(&mut price_outputs, price);
             };
         };
-        process_prices(price_outputs)
+        process_prices(price_outputs, threshold)
     }
 
-    fun process_prices(prices: vector<u64>): u64 {
+    fun process_prices(prices: vector<u64>, threshold: u64): u64 {
         let prices_len = vector::length(&prices);
-        assert!(prices_len >= 1, ENotEoughPrices);
+        assert!(prices_len >= threshold, ENotEoughPrices);
         event::emit(PriceVector { vec: prices });
         if (prices_len == 1) {
             *vector::borrow(&prices, 0)

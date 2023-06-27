@@ -8,7 +8,7 @@ module bucket_oracle::single_oracle {
     use sui::sui::SUI;
     use sui::event;
     use std::option::{Self, Option};
-    use std::ascii::{Self, String};
+    use std::ascii::String;
     use std::type_name;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
@@ -36,7 +36,7 @@ module bucket_oracle::single_oracle {
 
     friend bucket_oracle::bucket_oracle;
 
-    const TOLERANCE_MS_OF_GET_PRICE: u64 = 10000;
+    const TOLERANCE_MS_OF_GET_PRICE: u64 = 10_000;
 
     const ENoSourceConfig: u64 = 0;
     const EWrongSourceConfig: u64 = 1;
@@ -49,6 +49,7 @@ module bucket_oracle::single_oracle {
         precision_decimal: u8,
         precision: u64,
         tolerance_ms: u64,
+        threshold: u64,
         // recordings
         latest_update_ms: u64,
         // oracle configs
@@ -66,6 +67,7 @@ module bucket_oracle::single_oracle {
     public(friend) fun new<T>(
         precision_decimal: u8,
         tolerance_ms: u64,
+        threshold: u64,
         switchboard_config: Option<address>,
         pyth_config: Option<address>,
         supra_config: Option<u32>,
@@ -78,6 +80,7 @@ module bucket_oracle::single_oracle {
             price: 0,
             precision_decimal,
             tolerance_ms,
+            threshold, 
             precision: math::pow(10, precision_decimal),
             latest_update_ms: 0,
             switchboard_config,
@@ -89,6 +92,10 @@ module bucket_oracle::single_oracle {
     public fun get_price<T>(oracle: &SingleOracle<T>, clock: &Clock): (u64, u64) {
         assert!(clock::timestamp_ms(clock) - oracle.latest_update_ms <= TOLERANCE_MS_OF_GET_PRICE, EPriceOutdated);
         (oracle.price, oracle.precision)
+    }
+
+    public(friend) fun update_threshold<T>(oracle: &mut SingleOracle<T>, threshold: u64) {
+        oracle.threshold = threshold;
     }
 
     ////////////////////////////////////////////////////////////////////////
@@ -198,11 +205,7 @@ module bucket_oracle::single_oracle {
         price_aggregator::push_price(&mut price_info_vec, switchboard_result);
         price_aggregator::push_price(&mut price_info_vec, pyth_result);
         price_aggregator::push_price(&mut price_info_vec, supra_result);
-        let agg_price = price_aggregator::aggregate_price(clock, price_info_vec, single_oracle.tolerance_ms);
-        // TODO: only boost SUI price on testnet for testing
-        if (ascii::into_bytes(type_name::get_module(&type_name::get<T>())) == b"sui") {
-            agg_price = agg_price * 10000;
-        };
+        let agg_price = price_aggregator::aggregate_price(clock, price_info_vec, single_oracle.tolerance_ms, single_oracle.threshold);
         single_oracle.price = agg_price;
         single_oracle.latest_update_ms = clock::timestamp_ms(clock);
     }
