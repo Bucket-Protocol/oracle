@@ -5,7 +5,6 @@ version = 0
 
 dependencies = [
   { name = "Sui" },
-  { name = "TestnetCoins" },
 ]
 
 [[move.package]]
@@ -18,12 +17,4 @@ source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/testn
 
 dependencies = [
   { name = "MoveStdlib" },
-]
-
-[[move.package]]
-name = "TestnetCoins"
-source = { git = "https://github.com/Bucket-Protocol/testnet-coins.git", rev = "main", subdir = "" }
-
-dependencies = [
-  { name = "Sui" },
 ]

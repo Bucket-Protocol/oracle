@@ -10,12 +10,6 @@ module bucket_oracle::bucket_oracle {
 
     use bucket_oracle::single_oracle::{Self, SingleOracle};
 
-    // Testnet Coin Types
-    use testnet_coins::wbtc::WBTC;
-    use testnet_coins::weth::WETH;
-    use testnet_coins::usdt::USDT;
-    use testnet_coins::usdc::USDC;
-
     // SUI
     const SUI_SWITCHBOARD_CONFIG: address = @0x84d2b7e435d6e6a5b137bf6f78f34b2c5515ae61cd8591d5ff6cd121a21aa6b7;
     // const SUI_PYTH_CONFIG: address = @0x50c67b3fd225db8912a424dd4baed60ffdde625ed2feaaf283724f9608fea266;
@@ -57,46 +51,6 @@ module bucket_oracle::bucket_oracle {
             // option::some(SUI_PYTH_CONFIG),
             option::none(),
             option::some(SUI_SUPRA_CONFIG),
-            ctx,
-        );
-        create_single_oracle<WBTC>(
-            &admin_cap,
-            &mut oracle,
-            2,
-            option::some(BTC_SWITCHBOARD_CONFIG),
-            // option::some(BTC_PYTH_CONFIG),
-            option::none(),
-            option::some(BTC_SUPRA_CONFIG),
-            ctx,
-        );
-        create_single_oracle<WETH>(
-            &admin_cap,
-            &mut oracle,
-            3,
-            option::some(ETH_SWITCHBOARD_CONFIG),
-            // option::some(ETH_PYTH_CONFIG),
-            option::none(),
-            option::some(ETH_SUPRA_CONFIG),
-            ctx,
-        );
-        create_single_oracle<USDT>(
-            &admin_cap,
-            &mut oracle,
-            6,
-            option::some(USDT_SWITCHBOARD_CONFIG),
-            // option::some(USDT_PYTH_CONFIG),
-            option::none(),
-            option::some(USDT_SUPRA_CONFIG),
-            ctx,
-        );
-        create_single_oracle<USDC>(
-            &admin_cap,
-            &mut oracle,
-            6,
-            option::some(USDC_SWITCHBOARD_CONFIG),
-            // option::some(USDC_PYTH_CONFIG),
-            option::none(),
-            option::some(USDC_SUPRA_CONFIG),
             ctx,
         );
 
