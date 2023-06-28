@@ -27,12 +27,12 @@ module bucket_oracle::single_oracle {
     use pyth::price_info::PriceInfoObject;
 
     // supra
-    use SupraOracle::SupraSValueFeed::OracleHolder;
+    // use SupraOracle::SupraSValueFeed::OracleHolder;
 
     // parsers
     use bucket_oracle::switchboard_parser;
     use bucket_oracle::pyth_parser;
-    use bucket_oracle::supra_parser;
+    // use bucket_oracle::supra_parser;
 
     friend bucket_oracle::bucket_oracle;
 
@@ -165,21 +165,21 @@ module bucket_oracle::single_oracle {
         oracle.supra_config = config;
     }
 
-    public fun collect_price_from_supra<T>(
-        oracle: &SingleOracle<T>,
-        // collector
-        price_collector: &mut PriceCollector<T>,
-        // supra inputs
-        source: &OracleHolder,
-        pair_id: u32,
-    ) {
-        assert!(option::is_some(&oracle.supra_config), ENoSourceConfig);
-        assert!(*option::borrow(&oracle.supra_config) == pair_id, EWrongSourceConfig);
-        let price_info = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
-        let coin_type = type_name::into_string(type_name::get<T>());
-        event::emit(ParsePriceEvent { coin_type, source_id: 2, price_info });
-        price_collector.supra_result = price_info;
-    }
+    // public fun collect_price_from_supra<T>(
+    //     oracle: &SingleOracle<T>,
+    //     // collector
+    //     price_collector: &mut PriceCollector<T>,
+    //     // supra inputs
+    //     source: &OracleHolder,
+    //     pair_id: u32,
+    // ) {
+    //     assert!(option::is_some(&oracle.supra_config), ENoSourceConfig);
+    //     assert!(*option::borrow(&oracle.supra_config) == pair_id, EWrongSourceConfig);
+    //     let price_info = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
+    //     let coin_type = type_name::into_string(type_name::get<T>());
+    //     event::emit(ParsePriceEvent { coin_type, source_id: 2, price_info });
+    //     price_collector.supra_result = price_info;
+    // }
 
     ////////////////////////////////////////////////////////////////////////
     //
