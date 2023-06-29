@@ -7,7 +7,7 @@ published-at = "0x0336be2a5fbdb2cce40356139c85fdda55d8fd35301ac204fb900a656ac7ea
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
 SwitchboardStdLib = { local = "./partners/switchboard" }
 Pyth = { local = "./partners/pyth" }
-# SupraOracle = { local = "./partners/supra" }
+SupraOracle = { local = "./partners/supra" }
 
 [addresses]
 bucket_oracle = "0x0336be2a5fbdb2cce40356139c85fdda55d8fd35301ac204fb900a656ac7eaa5"
