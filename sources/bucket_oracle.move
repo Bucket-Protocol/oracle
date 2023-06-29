@@ -19,7 +19,7 @@ module bucket_oracle::bucket_oracle {
     const MAX_U64: u64 = 0xffffffffffffffff;
 
     // Supra OracleHolder
-    // 0x090d740655461e285affa1654971c4e87064c31f672dda282c61df257c8c1ec0
+    // 0xaa0315f0748c1f24ddb2b45f7939cff40f7a8104af5ccbc4a1d32f870c0b4105
 
     // SUI
     const SUI_SWITCHBOARD_CONFIG: address = @0xbca474133638352ba83ccf7b5c931d50f764b09550e16612c9f70f1e21f3f594;
@@ -46,9 +46,14 @@ module bucket_oracle::bucket_oracle {
     // const USDC_PYTH_CONFIG: address = @0xa3d3e81bd7e890ac189b3f581b511f89333b94f445c914c983057e1ac09ff296;
     // const USDC_SUPRA_CONFIG: u32 = 89;
 
+    const PACKAGE_VERSION: u64 = 1;
+
     struct AdminCap has key { id: UID }
 
-    struct BucketOracle has key { id: UID }
+    struct BucketOracle has key {
+        id: UID,
+        version: u64,
+    }
 
     struct PriceType<phantom T> has copy, drop, store {}
 
@@ -111,7 +116,15 @@ module bucket_oracle::bucket_oracle {
     }
 
     fun new_oracle(ctx: &mut TxContext): (BucketOracle, AdminCap) {
-        (BucketOracle { id: object::new(ctx) }, AdminCap { id: object::new(ctx) })
+        (
+            BucketOracle {
+                id: object::new(ctx),
+                version: PACKAGE_VERSION,
+            },
+            AdminCap {
+                id: object::new(ctx)
+            }
+        )
     }
 
     public entry fun create_single_oracle<T>(
@@ -176,15 +189,26 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_supra_config(oracle, supra_config);
     }
 
+    public entry fun update_package_version<T>(
+        _: &AdminCap,
+        bucket_oracle: &mut BucketOracle,
+        version: u64,
+    ) {
+        bucket_oracle.version = version;
+    }
+
     public fun get_price<T>(bucket_oracle: &BucketOracle, clock: &Clock): (u64, u64) {
+        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
         single_oracle::get_price<T>(borrow_single_oracle(bucket_oracle), clock)
     }
 
     public fun borrow_single_oracle<T>(bucket_oracle: &BucketOracle): &SingleOracle<T> {
+        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
         dof::borrow<PriceType<T>, SingleOracle<T>>(&bucket_oracle.id, PriceType<T> {})
     }
 
     public fun borrow_single_oracle_mut<T>(bucket_oracle: &mut BucketOracle): &mut SingleOracle<T> {
+        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
         dof::borrow_mut<PriceType<T>, SingleOracle<T>>(&mut bucket_oracle.id, PriceType<T> {})
     }
 
@@ -193,6 +217,7 @@ module bucket_oracle::bucket_oracle {
         clock: &Clock,
         switchboard_source: &Aggregator,
     ) {
+        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
         let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
         let price_collector = single_oracle::issue_price_collector<T>();
         single_oracle::collect_price_from_switchboard(single_oracle, &mut price_collector, switchboard_source);
@@ -208,9 +233,23 @@ module bucket_oracle::bucket_oracle {
         buf: vector<u8>,
         fee: Coin<SUI>,
     ) {
+        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
         let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
         let price_collector = single_oracle::issue_price_collector<T>();
         single_oracle::collect_price_from_pyth(single_oracle, &mut price_collector, clock, wormhole_state, pyth_state, price_info_object, buf, fee);
+        single_oracle::update_oracle_price(single_oracle, clock, price_collector);
+    }
+
+    public entry fun update_price_from_pyth_read_only<T>(
+        bucket_oracle: &mut BucketOracle,
+        clock: &Clock,
+        pyth_state: &PythState,
+        price_info_object: &mut PriceInfoObject,
+    ) {
+        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
+        let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+        let price_collector = single_oracle::issue_price_collector<T>();
+        single_oracle::collect_price_from_pyth_read_only(single_oracle, &mut price_collector, clock, pyth_state, price_info_object);
         single_oracle::update_oracle_price(single_oracle, clock, price_collector);
     }
 

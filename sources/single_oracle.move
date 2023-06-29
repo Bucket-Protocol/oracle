@@ -155,6 +155,23 @@ module bucket_oracle::single_oracle {
         price_collector.pyth_result = price_info;
     }
 
+    public fun collect_price_from_pyth_read_only<T>(
+        oracle: &SingleOracle<T>,
+        // collector
+        price_collector: &mut PriceCollector<T>,
+        // pyth inputs
+        clock: &Clock,
+        pyth_state: &PythState,
+        price_info_object: &mut PriceInfoObject,
+    ) {
+        assert!(option::is_some(&oracle.pyth_config), ENoSourceConfig);
+        assert!(option::borrow(&oracle.pyth_config) == &object::id(price_info_object), EWrongSourceConfig);
+        let price_info = pyth_parser::parse_price_read_only(pyth_state, clock, price_info_object,oracle.precision_decimal);
+        let coin_type = type_name::into_string(type_name::get<T>());
+        event::emit(ParsePriceEvent { coin_type, source_id: 1, price_info});
+        price_collector.pyth_result = price_info;
+    }
+
     ////////////////////////////////////////////////////////////////////////
     //
     //    Supra
