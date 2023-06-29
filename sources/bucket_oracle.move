@@ -11,7 +11,7 @@ module bucket_oracle::bucket_oracle {
 
     use bucket_oracle::single_oracle::{Self, SingleOracle};
     use switchboard_std::aggregator::Aggregator;
-    // use SupraOracle::SupraSValueFeed::OracleHolder;
+    use SupraOracle::SupraSValueFeed::OracleHolder;
     use wormhole::state::{State as WormholeState};
     use pyth::state::{State as PythState};
     use pyth::price_info::PriceInfoObject;
@@ -253,17 +253,17 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_oracle_price(single_oracle, clock, price_collector);
     }
 
-    // public entry fun update_price_from_supra<T>(
-    //     bucket_oracle: &mut BucketOracle,
-    //     clock: &Clock,
-    //     supra_source: &OracleHolder,
-    //     pair_id: u32,
-    // ) {
-    //     let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-    //     let price_collector = single_oracle::issue_price_collector<T>();
-    //     single_oracle::collect_price_from_supra(single_oracle, &mut price_collector, supra_source, pair_id);
-    //     single_oracle::update_oracle_price(single_oracle, clock, price_collector);
-    // }
+    public entry fun update_price_from_supra<T>(
+        bucket_oracle: &mut BucketOracle,
+        clock: &Clock,
+        supra_source: &OracleHolder,
+        pair_id: u32,
+    ) {
+        let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+        let price_collector = single_oracle::issue_price_collector<T>();
+        single_oracle::collect_price_from_supra(single_oracle, &mut price_collector, supra_source, pair_id);
+        single_oracle::update_oracle_price(single_oracle, clock, price_collector);
+    }
 
     #[test_only]
     public fun new_for_testing<T>(precision_decimal: u8, ctx: &mut TxContext): (BucketOracle, AdminCap) {
