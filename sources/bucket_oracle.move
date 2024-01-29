@@ -16,8 +16,6 @@ module bucket_oracle::bucket_oracle {
     use pyth::state::{State as PythState};
     use pyth::price_info::PriceInfoObject;
 
-    const MAX_U64: u64 = 0xffffffffffffffff;
-
     // Supra OracleHolder
     // 0xaa0315f0748c1f24ddb2b45f7939cff40f7a8104af5ccbc4a1d32f870c0b4105
 
@@ -57,6 +55,7 @@ module bucket_oracle::bucket_oracle {
 
     struct PriceType<phantom T> has copy, drop, store {}
 
+    #[lint_allow(share_owned)]
     fun init(ctx: &mut TxContext) {
         let (oracle, admin_cap) = new_oracle(ctx);
         create_single_oracle<SUI>(
@@ -189,6 +188,7 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_supra_config(oracle, supra_config);
     }
 
+    #[allow(unused_type_parameter)]
     public entry fun update_package_version<T>(
         _: &AdminCap,
         bucket_oracle: &mut BucketOracle,
@@ -264,6 +264,9 @@ module bucket_oracle::bucket_oracle {
         single_oracle::collect_price_from_supra(single_oracle, &mut price_collector, supra_source, pair_id);
         single_oracle::update_oracle_price(single_oracle, clock, price_collector);
     }
+
+    #[test_only]
+    const MAX_U64: u64 = 0xffffffffffffffff;
 
     #[test_only]
     public fun new_for_testing<T>(precision_decimal: u8, ctx: &mut TxContext): (BucketOracle, AdminCap) {

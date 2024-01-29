@@ -7,8 +7,6 @@ module bucket_oracle::switchboard_parser {
     use switchboard_std::math;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
-    const EInvalidPrice: u64 = 0;
-
     fun extract_aggregator_info(feed: &Aggregator): (u128, u8, u64) {
         let (
             latest_result,
