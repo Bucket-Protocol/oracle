@@ -1,13 +1,15 @@
 [package]
 name = "BucketOracle"
-version = "0.0.1"
+version = "0.0.2"
+# published-at = "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc"
+published-at = "0xe2077d678de929d64d3fcd79c1adfbd23d97324e9bae3a60102d44367fbe008c"
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
 SwitchboardStdLib = { local = "./partners/switchboard" }
 Pyth = { local = "./partners/pyth" }
-# SupraOracle = { local = "./partners/supra" }
+SupraOracle = { local = "./partners/supra" }
 
 [addresses]
-bucket_oracle = "0x0"
+bucket_oracle = "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc"
 sui =  "0000000000000000000000000000000000000000000000000000000000000002"
