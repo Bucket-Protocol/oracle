@@ -1,0 +1,11 @@
+[package]
+name = "AfSuiRule"
+version = "0.0.1"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
+BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main" }
+AftermathLSD = { local = "../../partners/aftermath-interfaces/packages/afsui/afsui-staked-sui-vault" }
+
+[addresses]
+afsui_rule = "0x0"
