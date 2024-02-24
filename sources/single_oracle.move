@@ -4,6 +4,7 @@ module bucket_oracle::single_oracle {
     use sui::tx_context::TxContext;
     use sui::clock::{Self, Clock};
     use sui::math;
+    use sui::dynamic_field as df;
     use sui::coin::Coin;
     use sui::sui::SUI;
     use sui::event;
@@ -41,6 +42,7 @@ module bucket_oracle::single_oracle {
     const ENoSourceConfig: u64 = 0;
     const EWrongSourceConfig: u64 = 1;
     const EPriceOutdated: u64 = 2;
+    const EInvalidUpdateRule: u64 = 3;
 
     struct SingleOracle<phantom T> has key, store {
         id: UID,
@@ -226,6 +228,51 @@ module bucket_oracle::single_oracle {
         single_oracle.price = agg_price;
         single_oracle.latest_update_ms = clock::timestamp_ms(clock);
     }
+
+    // >>>>>>>>>>>>>> Derivative >>>>>>>>>>>>>>
+
+    struct WhitelistRule<phantom R: drop> has store, copy, drop {}
+
+    public fun update_oracle_price_with_rule<T, R: drop>(
+        single_oracle: &mut SingleOracle<T>,
+        _rule: R,
+        clock: &Clock,
+        price: u64,
+    ) {
+        assert!(
+            df::exists_(&single_oracle.id, WhitelistRule<R> {}),
+            EInvalidUpdateRule,
+        );
+        single_oracle.price = price;
+        let current_time = clock::timestamp_ms(clock);
+        single_oracle.latest_update_ms = current_time;
+    }
+
+    public fun precision_decimal<T>(single_oracle: &SingleOracle<T>): u8 {
+        single_oracle.precision_decimal
+    }
+
+    public fun precision<T>(single_oracle: &SingleOracle<T>): u64 {
+        single_oracle.precision
+    }
+
+    public(friend) fun add_rule<T, R: drop>(
+        single_oracle: &mut SingleOracle<T>,
+    ) {
+        df::add(
+            &mut single_oracle.id, WhitelistRule<R> {}, true,
+        );
+    }
+
+    public(friend) fun remove_rule<T, R: drop>(
+        single_oracle: &mut SingleOracle<T>,
+    ) {
+        df::remove<WhitelistRule<R>, bool>(
+            &mut single_oracle.id, WhitelistRule<R> {},
+        );
+    }
+
+    // <<<<<<<<<<<<<< Derivative <<<<<<<<<<<<<<
 
     #[test_only]
     public fun update_price_for_testing<T>(oracle: &mut SingleOracle<T>, price: u64) {

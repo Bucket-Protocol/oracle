@@ -265,6 +265,26 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_oracle_price(single_oracle, clock, price_collector);
     }
 
+    // >>>>>>>>>>>>>> Derivative >>>>>>>>>>>>>>
+
+    public fun add_rule<T, R: drop>(
+        _: &AdminCap,
+        oracle: &mut BucketOracle,
+    ) {
+        let single_oracle = borrow_single_oracle_mut<T>(oracle);
+        single_oracle::add_rule<T, R>(single_oracle);
+    }
+
+    public fun remove_rule<T, R: drop>(
+        _: &AdminCap,
+        oracle: &mut BucketOracle,
+    ) {
+        let single_oracle = borrow_single_oracle_mut<T>(oracle);
+        single_oracle::remove_rule<T, R>(single_oracle);
+    }
+
+    // <<<<<<<<<<<<<< Derivative <<<<<<<<<<<<<<
+
     #[test_only]
     const MAX_U64: u64 = 0xffffffffffffffff;
 
