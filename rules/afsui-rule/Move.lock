@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "3D995446095F52CDB60E2B4F34A0C5F3C5217AB6CD247F9C68FB388B47565C4A"
+manifest_digest = "87FEB51901785F738060D4B8D3F1006787D5588C3D13DE1923896FD1B6DC6072"
 deps_digest = "060AD7E57DFB13104F21BE5F5C3759D03F0553FC3229247D9A7A6B45F50D03A3"
 
 dependencies = [
@@ -54,7 +54,7 @@ dependencies = [
 
 [[move.package]]
 name = "BucketOracle"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "" }
 
 dependencies = [
   { name = "Pyth" },
@@ -77,7 +77,7 @@ source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/mainn
 
 [[move.package]]
 name = "Pyth"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/pyth" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/pyth" }
 
 dependencies = [
   { name = "Sui" },
@@ -120,7 +120,7 @@ dependencies = [
 
 [[move.package]]
 name = "SupraOracle"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/supra" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/supra" }
 
 dependencies = [
   { name = "Sui" },
@@ -128,7 +128,7 @@ dependencies = [
 
 [[move.package]]
 name = "SwitchboardStdLib"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/switchboard" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/switchboard" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -137,7 +137,7 @@ dependencies = [
 
 [[move.package]]
 name = "Wormhole"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/pyth/wormhole" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/pyth/wormhole" }
 
 dependencies = [
   { name = "Sui" },
