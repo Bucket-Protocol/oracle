@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "87FEB51901785F738060D4B8D3F1006787D5588C3D13DE1923896FD1B6DC6072"
+manifest_digest = "7C7FBAD7046D387599A51F5F2CFA93D9933CFD996A3F3411F7EDCAEE84C20D8E"
 deps_digest = "060AD7E57DFB13104F21BE5F5C3759D03F0553FC3229247D9A7A6B45F50D03A3"
 
 dependencies = [
@@ -150,8 +150,3 @@ source = { local = "../../partners/aftermath-interfaces/packages/utility/utiliti
 dependencies = [
   { name = "Sui" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.18.1"
-edition = "legacy"
-flavor = "sui"
