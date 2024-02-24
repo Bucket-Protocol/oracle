@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "CF9EC8D94ECBA299C0DA8ABE8AE0DE0275831D9E6730EA18FB40FD5998960734"
+manifest_digest = "0134CDB135416D211F56A3F4B5E7D042DF862D9F6944F23AB660F3E46A0BA47C"
 deps_digest = "F9B494B64F0615AED0E98FC12A85B85ECD2BC5185C22D30E7F67786BB52E507C"
 
 dependencies = [
@@ -57,3 +57,8 @@ source = { local = "partners/pyth/wormhole" }
 dependencies = [
   { name = "Sui" },
 ]
+
+[move.toolchain-version]
+compiler-version = "1.18.1"
+edition = "legacy"
+flavor = "sui"

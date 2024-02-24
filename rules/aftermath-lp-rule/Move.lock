@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "D177E60C5F16BAE7DC0244E1977B2B7D6A2F9554DE37A5D8E8BCDC35BF974F53"
+manifest_digest = "93A0E15D7086C0C4C7DBCB68C43ED3011C391E05056723FFB108ACAB7C5DC587"
 deps_digest = "060AD7E57DFB13104F21BE5F5C3759D03F0553FC3229247D9A7A6B45F50D03A3"
 
 dependencies = [
@@ -31,7 +31,7 @@ dependencies = [
 
 [[move.package]]
 name = "BucketOracle"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "" }
 
 dependencies = [
   { name = "Pyth" },
@@ -66,7 +66,7 @@ dependencies = [
 
 [[move.package]]
 name = "Pyth"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/pyth" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/pyth" }
 
 dependencies = [
   { name = "Sui" },
@@ -91,7 +91,7 @@ dependencies = [
 
 [[move.package]]
 name = "SupraOracle"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/supra" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/supra" }
 
 dependencies = [
   { name = "Sui" },
@@ -99,7 +99,7 @@ dependencies = [
 
 [[move.package]]
 name = "SwitchboardStdLib"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/switchboard" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/switchboard" }
 
 dependencies = [
   { name = "MoveStdlib" },
@@ -116,7 +116,7 @@ dependencies = [
 
 [[move.package]]
 name = "Wormhole"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main", subdir = "partners/pyth/wormhole" }
+source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/pyth/wormhole" }
 
 dependencies = [
   { name = "Sui" },
@@ -129,8 +129,3 @@ source = { local = "aftermath-interfaces/packages/utility/utilities" }
 dependencies = [
   { name = "Sui" },
 ]
-
-[move.toolchain-version]
-compiler-version = "1.18.1"
-edition = "legacy"
-flavor = "sui"
