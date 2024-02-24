@@ -11,6 +11,7 @@ Cargo.lock
 
 # Move files
 build/
+aftermath-interfaces
 
 # Added by cargo
 /target
