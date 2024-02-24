@@ -2,7 +2,7 @@
 
 [move]
 version = 0
-manifest_digest = "D177E60C5F16BAE7DC0244E1977B2B7D6A2F9554DE37A5D8E8BCDC35BF974F53"
+manifest_digest = "6B182937C716EF170FC97F84B402F023A6795772513BD061C084965D3A57B9B7"
 deps_digest = "060AD7E57DFB13104F21BE5F5C3759D03F0553FC3229247D9A7A6B45F50D03A3"
 
 dependencies = [
@@ -13,7 +13,7 @@ dependencies = [
 
 [[move.package]]
 name = "AftermathAmm"
-source = { local = "aftermath-interfaces/packages/amm/amm" }
+source = { local = "../../partners/aftermath-interfaces/packages/amm/amm" }
 
 dependencies = [
   { name = "AmmMath" },
@@ -23,7 +23,7 @@ dependencies = [
 
 [[move.package]]
 name = "AmmMath"
-source = { local = "aftermath-interfaces/packages/amm/amm-math" }
+source = { local = "../../partners/aftermath-interfaces/packages/amm/amm-math" }
 
 dependencies = [
   { name = "Sui" },
@@ -42,7 +42,7 @@ dependencies = [
 
 [[move.package]]
 name = "InsuranceFund"
-source = { local = "aftermath-interfaces/packages/amm/amm-insurance-fund" }
+source = { local = "../../partners/aftermath-interfaces/packages/amm/amm-insurance-fund" }
 
 dependencies = [
   { name = "Sui" },
@@ -54,7 +54,7 @@ source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/mainn
 
 [[move.package]]
 name = "ProtocolFeeVault"
-source = { local = "aftermath-interfaces/packages/amm/amm-protocol-fee-vault" }
+source = { local = "../../partners/aftermath-interfaces/packages/amm/amm-protocol-fee-vault" }
 
 dependencies = [
   { name = "InsuranceFund" },
@@ -75,7 +75,7 @@ dependencies = [
 
 [[move.package]]
 name = "ReferralVault"
-source = { local = "aftermath-interfaces/packages/amm/amm-referral-vault" }
+source = { local = "../../partners/aftermath-interfaces/packages/amm/amm-referral-vault" }
 
 dependencies = [
   { name = "Sui" },
@@ -108,7 +108,7 @@ dependencies = [
 
 [[move.package]]
 name = "Treasury"
-source = { local = "aftermath-interfaces/packages/amm/amm-treasury" }
+source = { local = "../../partners/aftermath-interfaces/packages/amm/amm-treasury" }
 
 dependencies = [
   { name = "Sui" },
@@ -124,7 +124,7 @@ dependencies = [
 
 [[move.package]]
 name = "utilities"
-source = { local = "aftermath-interfaces/packages/utility/utilities" }
+source = { local = "../../partners/aftermath-interfaces/packages/utility/utilities" }
 
 dependencies = [
   { name = "Sui" },
