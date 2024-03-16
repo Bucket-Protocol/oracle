@@ -100,6 +100,10 @@ module bucket_oracle::single_oracle {
         oracle.threshold = threshold;
     }
 
+    public(friend) fun update_tolerance_ms<T>(oracle: &mut SingleOracle<T>, tolerance_ms: u64) {
+        oracle.tolerance_ms = tolerance_ms;
+    }
+
     ////////////////////////////////////////////////////////////////////////
     //
     //    Swichboard

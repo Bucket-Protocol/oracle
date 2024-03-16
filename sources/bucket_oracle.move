@@ -188,6 +188,15 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_supra_config(oracle, supra_config);
     }
 
+    public fun update_tolerance_ms<T>(
+        _: &AdminCap,
+        bucket_oracle: &mut BucketOracle,
+        tolerance_ms: u64,
+    ) {
+        let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+        single_oracle::update_tolerance_ms(oracle, tolerance_ms);
+    }
+
     #[allow(unused_type_parameter)]
     public entry fun update_package_version<T>(
         _: &AdminCap,
