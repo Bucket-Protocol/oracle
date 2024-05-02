@@ -1,13 +1,15 @@
 [package]
-name = "haSuiRule"
+name = "HaSuiRule"
 edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
 # license = ""           # e.g., "MIT", "GPL", "Apache 2.0"
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
+published-at = "0x4433ab096a71cbcdf70183f465e613955526f321039d9a76be0bd98c5da75382"
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
+SuiSystem = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-system", rev = "framework/mainnet" }
 Haedal = { local = "../../partners/haedal" }
-BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main" }
+BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet" }
 
 # For remote import, use the `{ git = "...", subdir = "...", rev = "..." }`.
 # Revision can be a branch, a tag, and a commit hash.
@@ -21,7 +23,7 @@ BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "m
 # Override = { local = "../conflicting/version", override = true }
 
 [addresses]
-hasui_rule = "0x0"
+hasui_rule = "0x4433ab096a71cbcdf70183f465e613955526f321039d9a76be0bd98c5da75382"
 
 # Named addresses will be accessible in Move as `@name`. They're also exported:
 # for example, `std = "0x1"` is exported by the Standard Library.
