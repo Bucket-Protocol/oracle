@@ -2,8 +2,7 @@ module vsui_rule::vsui_rule {
 
     use sui::sui::SUI;
     use sui::clock::Clock;
-    use sui::coin::CoinMetadata;
-    use volo::cert::CERT;
+    use volo::cert::{CERT, Metadata};
     use volo::native_pool::{Self, NativePool};
     use bucket_oracle::bucket_oracle::{Self as bo, BucketOracle};
     use bucket_oracle::single_oracle as so;
@@ -13,7 +12,7 @@ module vsui_rule::vsui_rule {
     public fun update_price(
         oracle: &mut BucketOracle,
         native_pool: &NativePool,
-        metadata: &CoinMetadata<CERT>,
+        metadata: &Metadata<CERT>,
         clock: &Clock,
     ) {
         let (sui_price, sui_precision) = bo::get_price<SUI>(oracle, clock);
