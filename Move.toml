@@ -7,10 +7,28 @@ version = "0.0.3"
 published-at = "0x7d861b0e12694e099aba07b1fb49349abb06c96294739b5487b8d8261a60e17d"
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet" }
 SwitchboardStdLib = { local = "./partners/switchboard" }
-Pyth = { local = "./partners/pyth" }
-SupraOracle = { local = "./partners/supra" }
+
+[dependencies.SupraOracle]
+git = "https://github.com/naviprotocol/dora-interface.git"
+subdir = "sui/mainnet/supra_holder"
+rev = "main"
+
+[dependencies.Pyth]
+git = "https://github.com/pyth-network/pyth-crosschain.git"
+subdir = "target_chains/sui/contracts"
+rev = "sui-contract-mainnet"
+ 
+[dependencies.Wormhole]
+git = "https://github.com/wormhole-foundation/wormhole.git"
+subdir = "sui/wormhole"
+rev = "sui-upgrade-mainnet"
+ 
+[dependencies.Sui]
+git = "https://github.com/MystenLabs/sui.git"
+subdir = "crates/sui-framework/packages/sui-framework"
+rev = "041c5f2bae2fe52079e44b70514333532d69f4e6"
+override = true
 
 [addresses]
 bucket_oracle = "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc"
