@@ -1,4 +1,4 @@
-module pyth::price_identifier {
+module pyth_local::price_identifier {
     use std::vector;
 
     const IDENTIFIER_BYTES_LENGTH: u64 = 32;

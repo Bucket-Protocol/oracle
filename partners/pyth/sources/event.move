@@ -1,9 +1,9 @@
-module pyth::event {
+module pyth_local::event {
     use sui::event::{Self};
-    use pyth::price_feed::{PriceFeed};
+    use pyth_local::price_feed::{PriceFeed};
 
-    friend pyth::pyth;
-    friend pyth::state;
+    friend pyth_local::pyth;
+    friend pyth_local::state;
 
     struct PythInitializationEvent has copy, drop {}
 

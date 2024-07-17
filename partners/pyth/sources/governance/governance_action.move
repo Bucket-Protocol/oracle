@@ -1,5 +1,5 @@
-module pyth::governance_action {
-    //use pyth::error;
+module pyth_local::governance_action {
+    //use pyth_local::error;
 
     const CONTRACT_UPGRADE: u8 = 0;
     const SET_GOVERNANCE_DATA_SOURCE: u8 = 1;

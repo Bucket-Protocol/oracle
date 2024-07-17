@@ -6,8 +6,8 @@
 /// used to determine the latest version for this build. If the current version
 /// is not this build's, then paths through the `state` module will abort.
 ///
-/// See `pyth::state` and `wormhole::package_utils` for more info.
-module pyth::version_control {
+/// See `pyth_local::state` and `wormhole::package_utils` for more info.
+module pyth_local::version_control {
     ////////////////////////////////////////////////////////////////////////////
     //
     //  Hard-coded Version Control
@@ -54,7 +54,7 @@ module pyth::version_control {
     //
     ////////////////////////////////////////////////////////////////////////////
 
-    friend pyth::state;
+    friend pyth_local::state;
 
     #[test_only]
     public fun dummy(): V__DUMMY {

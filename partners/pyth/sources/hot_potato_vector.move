@@ -1,10 +1,10 @@
 /// This class represents a vector of objects wrapped
 /// inside of a hot potato struct.
-module pyth::hot_potato_vector {
+module pyth_local::hot_potato_vector {
     use std::vector;
     const E_EMPTY_HOT_POTATO: u64 = 0;
 
-    friend pyth::pyth;
+    friend pyth_local::pyth;
 
     // A hot potato containing a vector of elements
     struct HotPotatoVector<T: copy + drop> {

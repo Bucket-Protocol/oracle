@@ -13,8 +13,8 @@ module bucket_oracle::bucket_oracle {
     use switchboard_std::aggregator::Aggregator;
     use SupraOracle::SupraSValueFeed::OracleHolder;
     use wormhole::state::{State as WormholeState};
-    use pyth::state::{State as PythState};
-    use pyth::price_info::PriceInfoObject;
+    use pyth_local::state::{State as PythState};
+    use pyth_local::price_info::PriceInfoObject;
 
     // Supra OracleHolder
     // 0xaa0315f0748c1f24ddb2b45f7939cff40f7a8104af5ccbc4a1d32f870c0b4105

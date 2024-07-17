@@ -1,20 +1,20 @@
-module pyth::setup {
+module pyth_local::setup {
     use sui::object::{Self, UID};
     use sui::package::{Self, UpgradeCap};
     use sui::transfer::{Self};
     use sui::tx_context::{Self, TxContext};
 
-    use pyth::state::{Self};
-    use pyth::data_source::{DataSource};
+    use pyth_local::state::{Self};
+    use pyth_local::data_source::{DataSource};
 
     /// `UpgradeCap` is not as expected when initializing `State`.
     const E_INVALID_UPGRADE_CAP: u64 = 0;
     /// Build version for setup must only be `1`.
     const E_INVALID_BUILD_VERSION: u64 = 1;
 
-    friend pyth::pyth;
+    friend pyth_local::pyth;
     #[test_only]
-    friend pyth::pyth_tests;
+    friend pyth_local::pyth_tests;
 
     /// Capability created at `init`, which will be destroyed once
     /// `init_and_share_state` is called. This ensures only the deployer can
@@ -39,7 +39,7 @@ module pyth::setup {
         // This will be created and sent to the transaction sender
         // automatically when the contract is published.
         transfer::public_transfer(
-            sui::package::test_publish(object::id_from_address(@pyth), ctx),
+            sui::package::test_publish(object::id_from_address(@pyth_local), ctx),
             tx_context::sender(ctx)
         );
     }

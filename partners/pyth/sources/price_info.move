@@ -1,19 +1,19 @@
-module pyth::price_info {
+module pyth_local::price_info {
     use sui::object::{Self, UID, ID};
     use sui::tx_context::{TxContext};
     use sui::dynamic_object_field::{Self};
     use sui::table::{Self};
 
-    use pyth::price_feed::{Self, PriceFeed};
-    use pyth::price_identifier::{PriceIdentifier};
+    use pyth_local::price_feed::{Self, PriceFeed};
+    use pyth_local::price_identifier::{PriceIdentifier};
 
     const KEY: vector<u8> = b"price_info";
     const E_PRICE_INFO_REGISTRY_ALREADY_EXISTS: u64 = 0;
     const E_PRICE_IDENTIFIER_ALREADY_REGISTERED: u64 = 1;
     const E_PRICE_IDENTIFIER_NOT_REGISTERED: u64 = 2;
 
-    friend pyth::pyth;
-    friend pyth::state;
+    friend pyth_local::pyth;
+    friend pyth_local::state;
 
     /// Sui object version of PriceInfo.
     /// Has a key ability, is unique for each price identifier, and lives in global store.
@@ -117,8 +117,8 @@ module pyth::price_info {
     public fun test_get_price_info_object_id_from_price_identifier(){
         use sui::object::{Self};
         use sui::test_scenario::{Self, ctx};
-        use pyth::price_identifier::{Self};
-        let scenario = test_scenario::begin(@pyth);
+        use pyth_local::price_identifier::{Self};
+        let scenario = test_scenario::begin(@pyth_local);
         let uid = object::new(ctx(&mut scenario));
 
         // Create a new price info object registry.

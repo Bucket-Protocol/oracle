@@ -4,12 +4,12 @@ module bucket_oracle::pyth_parser {
     use sui::object::{Self, ID};
     use wormhole::state::{State as WormholeState};
     use wormhole::vaa;
-    use pyth::state::{State as PythState};
-    use pyth::price_info::PriceInfoObject;
-    use pyth::hot_potato_vector;
-    use pyth::pyth;
-    use pyth::i64;
-    use pyth::price;
+    use pyth_local::state::{State as PythState};
+    use pyth_local::price_info::PriceInfoObject;
+    use pyth_local::hot_potato_vector;
+    use pyth_local::pyth;
+    use pyth_local::i64;
+    use pyth_local::price;
     use sui::clock::Clock;
     use sui::coin::Coin;
     use sui::sui::SUI;
