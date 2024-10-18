@@ -3,11 +3,12 @@ name = "ScallopRule"
 edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
 # license = ""           # e.g., "MIT", "GPL", "Apache 2.0"
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
+published-at = "0xe8e2e65d77e92fee59b9027ad0e29da5d932c6a5fb46c9d4eecbcc747e33d38a"
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet", override = true }
 ScallopProtocol = { git = "https://github.com/scallop-io/sui-lending-protocol.git", subdir = "contracts/protocol", rev = "main" }
-BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "main" }
+BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet" }
 
 # For remote import, use the `{ git = "...", subdir = "...", rev = "..." }`.
 # Revision can be a branch, a tag, and a commit hash.
@@ -21,7 +22,8 @@ BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "m
 # Override = { local = "../conflicting/version", override = true }
 
 [addresses]
-scallop_rule = "0x0"
+# scallop_rule = "0x0"
+scallop_rule = "0xe8e2e65d77e92fee59b9027ad0e29da5d932c6a5fb46c9d4eecbcc747e33d38a"
 
 # Named addresses will be accessible in Move as `@name`. They're also exported:
 # for example, `std = "0x1"` is exported by the Standard Library.
