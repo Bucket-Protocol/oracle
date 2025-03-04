@@ -3,7 +3,7 @@ Update rule for sCoin price feeds
 
 ### Package ID
 ```
-0x7e64dcbb4aa2f2af0e3d13c6baeb2baf4fc375fa765cadd9483087ae70e4503d
+0xc3fb5907e9d8aa5cb0e866152da81f6ea9799c210b52a9d64eb3729d033e8c21
 ```
 
 ### Shared Objects

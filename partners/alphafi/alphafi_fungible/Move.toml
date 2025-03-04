@@ -1,17 +1,15 @@
 [package]
-name = "ScallopRule"
+name = "alphafi_fungible"
+published-at = "0xbfbd59ec10e2b62c887e268a051ae84570ecf0d621480c0418300f28913d7380"
 edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
 # license = ""           # e.g., "MIT", "GPL", "Apache 2.0"
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
-# published-at = "0xe8e2e65d77e92fee59b9027ad0e29da5d932c6a5fb46c9d4eecbcc747e33d38a"
-# published-at = "0x7e64dcbb4aa2f2af0e3d13c6baeb2baf4fc375fa765cadd9483087ae70e4503d"
-# published-at = "0xaa4f958759df1be17107e26227bf22c1cb216e7cc2b148d210d46aa0a8f6728d"
-published-at = "0xc3fb5907e9d8aa5cb0e866152da81f6ea9799c210b52a9d64eb3729d033e8c21"
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/mainnet", override = true }
-ScallopProtocol = { git = "https://github.com/scallop-io/sui-lending-protocol.git", subdir = "contracts/protocol", rev = "main" }
-BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet" }
+alphafi = {local = "../alphafi"}
+BluefinSpot = { local = "../bluefin-spot-contract-interface-main"}
+liquid_staking = {local = "../liquid-staking/contracts"}
 
 # For remote import, use the `{ git = "...", subdir = "...", rev = "..." }`.
 # Revision can be a branch, a tag, and a commit hash.
@@ -25,8 +23,7 @@ BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "m
 # Override = { local = "../conflicting/version", override = true }
 
 [addresses]
-scallop_rule = "0x0"
-# scallop_rule = "0xe8e2e65d77e92fee59b9027ad0e29da5d932c6a5fb46c9d4eecbcc747e33d38a"
+alphafi_fungible = "0x59fd36210b1bf1dcd70d148cd868e059e74b22a660f84c5602cfb8501442322a"
 
 # Named addresses will be accessible in Move as `@name`. They're also exported:
 # for example, `std = "0x1"` is exported by the Standard Library.
@@ -41,3 +38,4 @@ scallop_rule = "0x0"
 # The dev-addresses section allows overwriting named addresses for the `--test`
 # and `--dev` modes.
 # alice = "0xB0B"
+

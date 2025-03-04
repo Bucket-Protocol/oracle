@@ -2,7 +2,7 @@
 
 [move]
 version = 3
-manifest_digest = "A62E7C8A2FBE0298714F00B35E024043769D741A67DEF67D7E09310522B8CB1B"
+manifest_digest = "5C132B77F1B958CC77824FEB0A9B663C48C35690F9F8B123F26A47C80198684E"
 deps_digest = "060AD7E57DFB13104F21BE5F5C3759D03F0553FC3229247D9A7A6B45F50D03A3"
 dependencies = [
   { id = "BucketOracle", name = "BucketOracle" },
@@ -121,7 +121,7 @@ dependencies = [
 ]
 
 [move.toolchain-version]
-compiler-version = "1.38.3"
+compiler-version = "1.43.1"
 edition = "2024.beta"
 flavor = "sui"
 
@@ -130,5 +130,5 @@ flavor = "sui"
 [env.mainnet]
 chain-id = "35834a8a"
 original-published-id = "0xe8e2e65d77e92fee59b9027ad0e29da5d932c6a5fb46c9d4eecbcc747e33d38a"
-latest-published-id = "0xaa4f958759df1be17107e26227bf22c1cb216e7cc2b148d210d46aa0a8f6728d"
-published-version = "3"
+latest-published-id = "0xc3fb5907e9d8aa5cb0e866152da81f6ea9799c210b52a9d64eb3729d033e8c21"
+published-version = "4"

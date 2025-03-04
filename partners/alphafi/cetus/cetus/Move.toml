@@ -1,0 +1,12 @@
+[package]
+name = "cetus"
+version = "0.0.2"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "mainnet" }
+# CetusClmm = { git = "https://github.com/CetusProtocol/cetus-clmm-interface.git", subdir = "sui/clmmpool", rev = "mainnet-v1.2.0" }
+CetusClmm = { local = "../clmmpool" }
+
+[addresses]
+cetus = "0x0"
+
