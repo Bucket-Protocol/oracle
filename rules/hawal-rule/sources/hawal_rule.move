@@ -3,11 +3,10 @@ module hawal_rule::hawal_rule;
 use sui::clock::{Clock};
 use bucket_oracle::bucket_oracle::{BucketOracle};
 use haedal::{
-    walstaking::{ Staking as WalStaking},
+    walstaking::{Staking as WalStaking},
     hawal::{HAWAL},
 };
 use wal::wal::{WAL};
-
 
 public struct Rule has drop {}
 
@@ -15,7 +14,7 @@ public fun update_price(
     oracle: &mut BucketOracle,
     staking: &WalStaking,
     clock: &Clock,
-){
+) {
     let (wal_price, wal_precision) = oracle.get_price<WAL>(clock);
     let exchange_rate = staking.get_exchange_rate();
     let hawal_price = mul_and_div(wal_price, exchange_rate, rate_precision());
