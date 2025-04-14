@@ -1,0 +1,10 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@mysten/sui": "^1.27.0",
+    "bucket-protocol-sdk": "^0.11.0"
+  }
+}
