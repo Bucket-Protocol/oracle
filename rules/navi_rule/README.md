@@ -1,0 +1,14 @@
+### Deployments
+Package ID
+```
+0x1c2740b75e06bf7bcee49d6df216f8a069c00e86173a021da712c37de2eb84af
+```
+Config
+```
+0xecd074051d882c63b65468c6d9be4f23f50504a27fb09faac063097574c38464
+```
+AdminCap
+```
+0xe8357347c082c13e3832083199fdc04fbe62075ded05ba2f26de9a6ecd2160d7
+```
+
