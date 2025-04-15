@@ -1,6 +1,7 @@
 import { BucketClient } from "bucket-protocol-sdk";
 import { Transaction } from "@mysten/sui/transactions";
 import { signer } from "./config";
+import { HAWAL_RULE_PKG_ID, BUKCET_ORACLE_OBJECT_ID, WALRUS_STAKING_OBJECT_ID } from "./constant";
 
 const main = async () => {
   const client = new BucketClient();
@@ -8,11 +9,18 @@ const main = async () => {
 
   client.updateSupraOracle(tx, "WAL");
 
-  /// TODO: update haWAL price
-  // tx.moveCall({
-  //
-  // })
-  //
+  tx.moveCall(
+    {
+        package: HAWAL_RULE_PKG_ID,
+        module: "hawal_rule",
+        function: "update_price",
+        arguments: [
+            tx.object(BUKCET_ORACLE_OBJECT_ID),
+            tx.object(WALRUS_STAKING_OBJECT_ID),
+            tx.object("0x6"),
+        ]
+    }
+  );
   const res = await client.getSuiClient().signAndExecuteTransaction({
     transaction: tx,
     signer,
