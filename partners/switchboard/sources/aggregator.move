@@ -641,6 +641,7 @@ module switchboard_std::aggregator {
         );
     }
 
+    #[test]
     public entry fun create_and_read_test_aggregator(): address {
         use sui::test_scenario;
 

@@ -404,6 +404,7 @@ module switchboard_std::math {
         }
     }
 
+    #[test]
     public entry fun test_math() {
 
         let vec: vector<SwitchboardDecimal> = vector::empty();
