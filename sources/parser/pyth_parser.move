@@ -13,7 +13,6 @@ module bucket_oracle::pyth_parser {
     use sui::clock::Clock;
     use sui::coin::Coin;
     use sui::sui::SUI;
-    use sui::math::pow;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
     public fun parse_price(
@@ -39,9 +38,9 @@ module bucket_oracle::pyth_parser {
         let price = (i64::get_magnitude_if_positive(&price_i64));
 
         if (decimal_u8 > required_decimal) {
-            price = price / pow(10, decimal_u8 - required_decimal);
+            price = price / std::u64::pow(10, decimal_u8 - required_decimal);
         } else {
-            price = price * pow(10, required_decimal - decimal_u8);
+            price = price * std::u64::pow(10, required_decimal - decimal_u8);
         };
         let timestamp = timestamp_sec * 1000;
 
@@ -64,9 +63,9 @@ module bucket_oracle::pyth_parser {
         let price = (i64::get_magnitude_if_positive(&price_i64));
 
         if (decimal_u8 > required_decimal) {
-            price = price / pow(10, decimal_u8 - required_decimal);
+            price = price / std::u64::pow(10, decimal_u8 - required_decimal);
         } else {
-            price = price * pow(10, required_decimal - decimal_u8);
+            price = price * std::u64::pow(10, required_decimal - decimal_u8);
         };
         let timestamp = timestamp_sec * 1000;
 

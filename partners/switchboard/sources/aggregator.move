@@ -20,7 +20,7 @@ module switchboard_std::aggregator {
         id: UID,
 
         // Aggregator Config Data
-        authority: address, 
+        authority: address,
         queue_addr: address,
         token_addr: address,
         batch_size: u64,
@@ -67,7 +67,7 @@ module switchboard_std::aggregator {
 
         // DYNAMIC FIELDS -----
         // b"history": AggregatorHistoryData,
-        // b"jobs_data": AggregatorJobData 
+        // b"jobs_data": AggregatorJobData
     }
 
     struct SlidingWindowElement has store, drop, copy {
@@ -75,7 +75,7 @@ module switchboard_std::aggregator {
         value: SwitchboardDecimal,
         timestamp: u64
     }
-    
+
     // [IMMUTABLE / SHARED] - shared within the Aggregator, immutable for the Result
     struct SlidingWindow has copy, store {
         data: vector<SlidingWindowElement>,
@@ -102,7 +102,7 @@ module switchboard_std::aggregator {
         job_weights: vector<u8>,
         jobs_checksum: vector<u8>,
     }
-    
+
     // --- Initialization
     fun init(_ctx: &mut TxContext) {}
 
@@ -127,7 +127,7 @@ module switchboard_std::aggregator {
         ctx: &mut TxContext
     ): Aggregator {
         let id = object::new(ctx);
-        
+
         let history_id = object::new(ctx);
         dynamic_object_field::add(&mut id, b"history", AggregatorHistoryData {
             id: history_id,
@@ -151,14 +151,14 @@ module switchboard_std::aggregator {
             bag::add(&mut readers, *vector::borrow(&read_whitelist, i), true);
             i = i + 1;
         };
-        
+
         // get friend key byte array from type - limits access to functions to package
         let friend_key = utils::type_of<T>();
-        
+
         // emit init event
         Aggregator {
             id,
-            authority, 
+            authority,
             queue_addr,
             batch_size,
             min_oracle_results,
@@ -198,7 +198,7 @@ module switchboard_std::aggregator {
     public fun latest_value(aggregator: &Aggregator): (SwitchboardDecimal, u64) {
         assert!(aggregator.read_charge == 0, errors::PermissionDenied());
         (
-            aggregator.update_data.latest_result, 
+            aggregator.update_data.latest_result,
             aggregator.update_data.latest_timestamp,
         )
     }
@@ -239,7 +239,7 @@ module switchboard_std::aggregator {
     public fun aggregator_address(aggregator: &Aggregator): address {
         object::uid_to_address(&aggregator.id)
     }
-    
+
     public fun crank_disabled(aggregator: &Aggregator): bool {
         aggregator.crank_disabled
     }
@@ -261,7 +261,7 @@ module switchboard_std::aggregator {
     }
 
     public fun escrow_balance<CoinType>(
-        aggregator: &Aggregator, 
+        aggregator: &Aggregator,
         key: address
     ): u64 {
         utils::escrow_balance<CoinType>(&aggregator.escrows, key)
@@ -311,7 +311,7 @@ module switchboard_std::aggregator {
         let (is_in, idx) = vector::index_of(&job_data.job_keys, &job_address);
         if (!is_in) {
             return
-        };       
+        };
         vector::swap_remove(&mut job_data.job_keys, idx);
         vector::swap_remove(&mut job_data.job_weights, idx);
         let checksum = vector::empty();
@@ -377,7 +377,7 @@ module switchboard_std::aggregator {
         aggregator.read_charge = read_charge;
         aggregator.reward_escrow = reward_escrow;
         aggregator.limit_reads_to_whitelist = limit_reads_to_whitelist;
-        
+
         // if change in history length, reset history
         if (history_limit != aggregator.history_limit) {
             let aggregator_history = dynamic_object_field::borrow_mut<vector<u8>, AggregatorHistoryData>(&mut aggregator.id, b"history");
@@ -388,7 +388,7 @@ module switchboard_std::aggregator {
     }
 
     // Some sliding window functions
-    
+
     // make result accessible
     public fun sliding_window_latest_result(window: &SlidingWindow): (SwitchboardDecimal, u64) {
         (window.latest_result, window.latest_timestamp)
@@ -417,7 +417,7 @@ module switchboard_std::aggregator {
         false
     }
 
-    // mutate the update data 
+    // mutate the update data
     public fun add_to_sliding_window(
         update_data: &mut SlidingWindow,
         oracle_addr: address,
@@ -482,7 +482,7 @@ module switchboard_std::aggregator {
 
     // Package Scoped Functions ---------------------- //
     // only available to functions for which friend_key is available
-    
+
     public fun add_crank_row_count<T>(aggregator: &mut Aggregator, _friend_key: &T) {
         assert!(&aggregator.friend_key == &utils::type_of<T>(), errors::InvalidPackage());
         assert!(aggregator.version == switchboard::version(), errors::InvalidVersion());
@@ -494,22 +494,22 @@ module switchboard_std::aggregator {
         assert!(aggregator.version == switchboard::version(), errors::InvalidVersion());
         aggregator.crank_row_count = aggregator.crank_row_count - 1;
     }
- 
+
     public fun increment_curr_interval_payouts<T>(aggregator: &mut Aggregator, _friend_key: &T) {
         assert!(&aggregator.friend_key == &utils::type_of<T>(), errors::InvalidPackage());
         assert!(aggregator.version == switchboard::version(), errors::InvalidVersion());
         aggregator.curr_interval_payouts = aggregator.curr_interval_payouts + 1;
     }
- 
+
     public fun next_payment_interval<T>(aggregator: &mut Aggregator, _friend_key: &T) {
         assert!(&aggregator.friend_key == &utils::type_of<T>(), errors::InvalidPackage());
         assert!(aggregator.version == switchboard::version(), errors::InvalidVersion());
         aggregator.interval_id = aggregator.interval_id + 1;
-        aggregator.curr_interval_payouts = 0; 
+        aggregator.curr_interval_payouts = 0;
     }
 
     public fun escrow_deposit<CoinType, T>(
-        aggregator: &mut Aggregator, 
+        aggregator: &mut Aggregator,
         addr: address,
         coin: Coin<CoinType>,
         _friend_key: &T,
@@ -520,7 +520,7 @@ module switchboard_std::aggregator {
     }
 
     public fun escrow_withdraw<CoinType, T>(
-        aggregator: &mut Aggregator, 
+        aggregator: &mut Aggregator,
         addr: address,
         amount: u64,
         _friend_key: &T,
@@ -533,7 +533,7 @@ module switchboard_std::aggregator {
 
     // Returns (confirmed, result)
     public fun push_update<T>(
-        aggregator: &mut Aggregator, 
+        aggregator: &mut Aggregator,
         oracle_addr: address,
         value: SwitchboardDecimal,
         now: u64,
@@ -554,10 +554,10 @@ module switchboard_std::aggregator {
 
         // add update to sliding window
         let (confirmed, result) = add_to_sliding_window(
-            &mut aggregator.update_data, 
-            oracle_addr, 
-            value, 
-            batch_size, 
+            &mut aggregator.update_data,
+            oracle_addr,
+            value,
+            batch_size,
             min_oracle_results,
             now,
         );
@@ -568,7 +568,7 @@ module switchboard_std::aggregator {
             if (vector::length(&aggregator_history.data) != aggregator.history_limit) {
                 vector::push_back(&mut aggregator_history.data, AggregatorHistoryRow {
                     value: aggregator.update_data.latest_result,
-                    timestamp: now,              
+                    timestamp: now,
                 });
             } else {
                 let history_row = vector::borrow_mut(&mut aggregator_history.data, aggregator_history.history_write_idx);
@@ -600,21 +600,21 @@ module switchboard_std::aggregator {
     #[test_only]
     public fun create_aggregator_for_testing(ctx: &mut TxContext): Aggregator {
         new(
-            b"test", // name: 
-            @0x0, // queue_addr: 
-            1, // batch_size: 
-            1, // min_oracle_results: 
-            1, // min_job_results: 
-            0, // min_update_delay_seconds: 
-            math::zero(), // variance_threshold: 
-            0, // force_report_period: 
-            false, // disable_crank: 
-            0, // history_limit: 
-            0, // read_charge: 
-            @0x0, // reward_escrow: 
-            vector::empty(), // read_whitelist: 
-            false, // limit_reads_to_whitelist: 
-            0, // created_at: 
+            b"test", // name:
+            @0x0, // queue_addr:
+            1, // batch_size:
+            1, // min_oracle_results:
+            1, // min_job_results:
+            0, // min_update_delay_seconds:
+            math::zero(), // variance_threshold:
+            0, // force_report_period:
+            false, // disable_crank:
+            0, // history_limit:
+            0, // read_charge:
+            @0x0, // reward_escrow:
+            vector::empty(), // read_whitelist:
+            false, // limit_reads_to_whitelist:
+            0, // created_at:
             tx_context::sender(ctx), // authority, - this is the owner of the aggregator
             &SecretKey {}, // _friend_key: scopes the function to only by the package of aggregator creator (intenrnal)
             ctx,
@@ -633,15 +633,15 @@ module switchboard_std::aggregator {
 
         // set the value of a test aggregator
         push_update(
-            aggregator, 
-            tx_context::sender(ctx), 
+            aggregator,
+            tx_context::sender(ctx),
             math::new(value, scale_factor, negative),
             now,
             &SecretKey {},
         );
     }
 
-    #[test(account = @0x1)]
+    #[test]
     public entry fun create_and_read_test_aggregator(): address {
         use sui::test_scenario;
 
@@ -658,7 +658,7 @@ module switchboard_std::aggregator {
 
 
 
-        // read the latest value 
+        // read the latest value
         let (result, timestamp) = latest_value(&aggregator);
         let (result, scale_factor, negative) = math::unpack(result);
 

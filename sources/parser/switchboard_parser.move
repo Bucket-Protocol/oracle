@@ -2,7 +2,6 @@ module bucket_oracle::switchboard_parser {
 
     use std::option::{Self, Option};
     use sui::object::{Self, ID};
-    use sui::math::pow;
     use switchboard_std::aggregator::{Self, Aggregator};
     use switchboard_std::math;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
@@ -23,9 +22,9 @@ module bucket_oracle::switchboard_parser {
         if (price_u128 == 0) return option::none();
 
         if (decimal > required_decimal) {
-            price_u128 = price_u128 / (pow(10, decimal - required_decimal) as u128);
+            price_u128 = price_u128 / (std::u64::pow(10, decimal - required_decimal) as u128);
         } else {
-            price_u128 = price_u128 * (pow(10, required_decimal - decimal) as u128);
+            price_u128 = price_u128 * (std::u64::pow(10, required_decimal - decimal) as u128);
         };
 
         let price = (price_u128 as u64);

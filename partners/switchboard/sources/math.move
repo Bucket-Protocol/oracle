@@ -24,7 +24,7 @@ module switchboard_std::math {
         );
         let num = SwitchboardDecimal { value, dec, neg };
 
-        // expand nums out 
+        // expand nums out
         num.value = scale_to_decimals(&num, MAX_DECIMALS);
         num.dec = MAX_DECIMALS;
         num
@@ -85,7 +85,7 @@ module switchboard_std::math {
         }
     }
 
-    // By reference 
+    // By reference
 
     fun abs_gt(val1: &SwitchboardDecimal, val2: &SwitchboardDecimal): bool {
         val1.value > val2.value
@@ -104,7 +104,7 @@ module switchboard_std::math {
         // -x + y
         } else if (val1.neg) {
             sub_internal(val2, val1)
-            
+
         // x + -y
         } else if (val2.neg) {
             sub_internal(val1, val2)
@@ -313,7 +313,7 @@ module switchboard_std::math {
                 sorted = false;
                 break
             };
-            
+
             i = i + 1;
         };
         if (sorted) {
@@ -402,9 +402,9 @@ module switchboard_std::math {
             assert!(lte(vector::borrow(vec, i - 1), vector::borrow(vec, i)), 0);
             i = i + 1;
         }
-    } 
+    }
 
-    #[test(account = @0x1)]
+    #[test]
     public entry fun test_math() {
 
         let vec: vector<SwitchboardDecimal> = vector::empty();
