@@ -3,7 +3,6 @@ module bucket_oracle::single_oracle {
     use sui::object::{Self, ID, UID};
     use sui::tx_context::TxContext;
     use sui::clock::{Self, Clock};
-    use sui::math;
     use sui::dynamic_field as df;
     use sui::coin::Coin;
     use sui::sui::SUI;
@@ -82,8 +81,8 @@ module bucket_oracle::single_oracle {
             price: 0,
             precision_decimal,
             tolerance_ms,
-            threshold, 
-            precision: math::pow(10, precision_decimal),
+            threshold,
+            precision: std::u64::pow(10, precision_decimal),
             latest_update_ms: 0,
             switchboard_config,
             pyth_config,
@@ -210,7 +209,7 @@ module bucket_oracle::single_oracle {
         PriceCollector {
             switchboard_result: option::none(),
             pyth_result: option::none(),
-            supra_result: option::none(),    
+            supra_result: option::none(),
         }
     }
 

@@ -1,6 +1,5 @@
 module bucket_oracle::supra_parser {
     use std::option::{Self, Option};
-    use sui::math::pow;
     use SupraOracle::SupraSValueFeed::{get_price, OracleHolder};
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
@@ -13,9 +12,9 @@ module bucket_oracle::supra_parser {
         let decimal = (decimal_u16 as u8);
 
         if (decimal > required_decimal) {
-            price_u128 = price_u128 / (pow(10, decimal - required_decimal) as u128);
+            price_u128 = price_u128 / (std::u64::pow(10, decimal - required_decimal) as u128);
         } else {
-            price_u128 = price_u128 * (pow(10, required_decimal - decimal) as u128);
+            price_u128 = price_u128 * (std::u64::pow(10, required_decimal - decimal) as u128);
         };
 
         let price = (price_u128 as u64);

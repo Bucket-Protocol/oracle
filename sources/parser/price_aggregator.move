@@ -2,7 +2,6 @@ module bucket_oracle::price_aggregator {
 
     use std::vector;
     use std::option::{Self, Option};
-    use sui::math::diff;
     use sui::event;
     use sui::clock::{Self, Clock};
 
@@ -44,7 +43,7 @@ module bucket_oracle::price_aggregator {
         while (!vector::is_empty(&price_vec)) {
             let price_info = vector::pop_back(&mut price_vec);
             let PriceInfo { price, timestamp } = price_info;
-            if (diff(current_time, timestamp) <= tolerance_ms) {
+            if (std::u64::diff(current_time, timestamp) <= tolerance_ms) {
                 vector::push_back(&mut price_outputs, price);
             };
         };
@@ -61,7 +60,7 @@ module bucket_oracle::price_aggregator {
             let price_0 = *vector::borrow(&prices, 0);
             let price_1 = *vector::borrow(&prices, 1);
             let avg_price = (price_0 + price_1) / 2;
-            assert!(diff(price_0, price_1) * TOLERANCE_OF_PRICE_DIFF <= avg_price, ESignificientPriceDiff);
+            assert!(std::u64::diff(price_0, price_1) * TOLERANCE_OF_PRICE_DIFF <= avg_price, ESignificientPriceDiff);
             avg_price
         }
     }
