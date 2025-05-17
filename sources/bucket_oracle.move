@@ -4,25 +4,25 @@ module bucket_oracle::bucket_oracle {
     use sui::object::{Self, UID};
     use sui::transfer;
     use sui::dynamic_object_field as dof;
-    use sui::sui::SUI;
+    // use sui::sui::SUI;
     use sui::clock::Clock;
-    use sui::coin::Coin;
-    use std::option::{Self, Option};
+    // use sui::coin::Coin;
+    //use std::option::{Self, Option};
 
     use bucket_oracle::single_oracle::{Self, SingleOracle};
-    use switchboard_std::aggregator::Aggregator;
-    use SupraOracle::SupraSValueFeed::OracleHolder;
-    use wormhole::state::{State as WormholeState};
-    use pyth::state::{State as PythState};
-    use pyth::price_info::PriceInfoObject;
+    // use switchboard_std::aggregator::Aggregator;
+    // use SupraOracle::SupraSValueFeed::OracleHolder;
+    // use wormhole::state::{State as WormholeState};
+    // use pyth::state::{State as PythState};
+    // use pyth::price_info::PriceInfoObject;
 
     // Supra OracleHolder
     // 0xaa0315f0748c1f24ddb2b45f7939cff40f7a8104af5ccbc4a1d32f870c0b4105
 
     // SUI
-    const SUI_SWITCHBOARD_CONFIG: address = @0xbca474133638352ba83ccf7b5c931d50f764b09550e16612c9f70f1e21f3f594;
-    const SUI_PYTH_CONFIG: address = @0x168aa44fa92b27358beb17643834078b1320be6adf1b3bb0c7f018ac3591db1a;
-    const SUI_SUPRA_CONFIG: u32 = 90;
+    // const SUI_SWITCHBOARD_CONFIG: address = @0xbca474133638352ba83ccf7b5c931d50f764b09550e16612c9f70f1e21f3f594;
+    // const SUI_PYTH_CONFIG: address = @0x168aa44fa92b27358beb17643834078b1320be6adf1b3bb0c7f018ac3591db1a;
+    // const SUI_SUPRA_CONFIG: u32 = 90;
 
     // BTC
     // const BTC_SWITCHBOARD_CONFIG: address = @0x7c30e48db7dfd6a2301795be6cb99d00c87782e2547cf0c63869de244cfc7e47;
@@ -58,17 +58,15 @@ module bucket_oracle::bucket_oracle {
     #[lint_allow(share_owned)]
     fun init(ctx: &mut TxContext) {
         let (oracle, admin_cap) = new_oracle(ctx);
-        create_single_oracle<SUI>(
-            &admin_cap,
-            &mut oracle,
-            6,
-            3600_000,
-            1,
-            option::some(SUI_SWITCHBOARD_CONFIG),
-            option::some(SUI_PYTH_CONFIG),
-            option::some(SUI_SUPRA_CONFIG),
-            ctx,
-        );
+        // create_single_oracle<SUI>(
+        //     &admin_cap,
+        //     &mut oracle,
+        //     6,
+        //     3600_000,
+        //     1,
+            
+        //     ctx,
+        // );
         // create_single_oracle<WBTC>(
         //     &admin_cap,
         //     &mut oracle,
@@ -132,9 +130,7 @@ module bucket_oracle::bucket_oracle {
         precision_decimal: u8,
         tolerance_ms: u64,
         threshold: u64,
-        switchboard_config: Option<address>,
-        pyth_config: Option<address>,
-        supra_config: Option<u32>,
+        price: u64,
         ctx: &mut TxContext,
     ) {
         dof::add<PriceType<T>, SingleOracle<T>>(
@@ -144,9 +140,7 @@ module bucket_oracle::bucket_oracle {
                 precision_decimal,
                 tolerance_ms,
                 threshold,
-                switchboard_config,
-                pyth_config,
-                supra_config,
+                price,
                 ctx
             ),
         );
@@ -161,32 +155,32 @@ module bucket_oracle::bucket_oracle {
         single_oracle::update_threshold(oracle, threshold);
     }
 
-    public entry fun update_switchboard_config<T>(
-        _: &AdminCap,
-        bucket_oracle: &mut BucketOracle,
-        switchboard_config: Option<address>,
-    ) {
-        let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        single_oracle::update_switchboard_config<T>(oracle, switchboard_config);
-    }
+    // public entry fun update_switchboard_config<T>(
+    //     _: &AdminCap,
+    //     bucket_oracle: &mut BucketOracle,
+    //     switchboard_config: Option<address>,
+    // ) {
+    //     let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+    //     single_oracle::update_switchboard_config<T>(oracle, switchboard_config);
+    // }
 
-    public entry fun update_pyth_config<T>(
-        _: &AdminCap,
-        bucket_oracle: &mut BucketOracle,
-        pyth_config: Option<address>,
-    ) {
-        let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        single_oracle::update_pyth_config(oracle, pyth_config);
-    }
+    // public entry fun update_pyth_config<T>(
+    //     _: &AdminCap,
+    //     bucket_oracle: &mut BucketOracle,
+    //     pyth_config: Option<address>,
+    // ) {
+    //     let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+    //     single_oracle::update_pyth_config(oracle, pyth_config);
+    // }
 
-    public entry fun update_supra_config<T>(
-        _: &AdminCap,
-        bucket_oracle: &mut BucketOracle,
-        supra_config: Option<u32>,
-    ) {
-        let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        single_oracle::update_supra_config(oracle, supra_config);
-    }
+    // public entry fun update_supra_config<T>(
+    //     _: &AdminCap,
+    //     bucket_oracle: &mut BucketOracle,
+    //     supra_config: Option<u32>,
+    // ) {
+    //     let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+    //     single_oracle::update_supra_config(oracle, supra_config);
+    // }
 
     #[allow(unused_type_parameter)]
     public entry fun update_package_version<T>(
@@ -212,58 +206,58 @@ module bucket_oracle::bucket_oracle {
         dof::borrow_mut<PriceType<T>, SingleOracle<T>>(&mut bucket_oracle.id, PriceType<T> {})
     }
 
-    public entry fun update_price_from_switchboard<T>(
-        bucket_oracle: &mut BucketOracle,
-        clock: &Clock,
-        switchboard_source: &Aggregator,
-    ) {
-        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
-        let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        let price_collector = single_oracle::issue_price_collector<T>();
-        single_oracle::collect_price_from_switchboard(single_oracle, &mut price_collector, switchboard_source);
-        single_oracle::update_oracle_price(single_oracle, clock, price_collector);
-    }
+    // public entry fun update_price_from_switchboard<T>(
+    //     bucket_oracle: &mut BucketOracle,
+    //     clock: &Clock,
+    //     switchboard_source: &Aggregator,
+    // ) {
+    //     assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
+    //     let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+    //     let price_collector = single_oracle::issue_price_collector<T>();
+    //     single_oracle::collect_price_from_switchboard(single_oracle, &mut price_collector, switchboard_source);
+    //     single_oracle::update_oracle_price(single_oracle, clock, price_collector);
+    // }
 
-    public entry fun update_price_from_pyth<T>(
-        bucket_oracle: &mut BucketOracle,
-        clock: &Clock,
-        wormhole_state: &WormholeState,
-        pyth_state: &PythState,
-        price_info_object: &mut PriceInfoObject,
-        buf: vector<u8>,
-        fee: Coin<SUI>,
-    ) {
-        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
-        let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        let price_collector = single_oracle::issue_price_collector<T>();
-        single_oracle::collect_price_from_pyth(single_oracle, &mut price_collector, clock, wormhole_state, pyth_state, price_info_object, buf, fee);
-        single_oracle::update_oracle_price(single_oracle, clock, price_collector);
-    }
+    // public entry fun update_price_from_pyth<T>(
+    //     bucket_oracle: &mut BucketOracle,
+    //     clock: &Clock,
+    //     wormhole_state: &WormholeState,
+    //     pyth_state: &PythState,
+    //     price_info_object: &mut PriceInfoObject,
+    //     buf: vector<u8>,
+    //     fee: Coin<SUI>,
+    // ) {
+    //     assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
+    //     let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+    //     let price_collector = single_oracle::issue_price_collector<T>();
+    //     single_oracle::collect_price_from_pyth(single_oracle, &mut price_collector, clock, wormhole_state, pyth_state, price_info_object, buf, fee);
+    //     single_oracle::update_oracle_price(single_oracle, clock, price_collector);
+    // }
 
-    public entry fun update_price_from_pyth_read_only<T>(
-        bucket_oracle: &mut BucketOracle,
-        clock: &Clock,
-        pyth_state: &PythState,
-        price_info_object: &mut PriceInfoObject,
-    ) {
-        assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
-        let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        let price_collector = single_oracle::issue_price_collector<T>();
-        single_oracle::collect_price_from_pyth_read_only(single_oracle, &mut price_collector, clock, pyth_state, price_info_object);
-        single_oracle::update_oracle_price(single_oracle, clock, price_collector);
-    }
+    // public entry fun update_price_from_pyth_read_only<T>(
+    //     bucket_oracle: &mut BucketOracle,
+    //     clock: &Clock,
+    //     pyth_state: &PythState,
+    //     price_info_object: &mut PriceInfoObject,
+    // ) {
+    //     assert!(bucket_oracle.version == PACKAGE_VERSION, 99);
+    //     let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+    //     let price_collector = single_oracle::issue_price_collector<T>();
+    //     single_oracle::collect_price_from_pyth_read_only(single_oracle, &mut price_collector, clock, pyth_state, price_info_object);
+    //     single_oracle::update_oracle_price(single_oracle, clock, price_collector);
+    // }
 
-    public entry fun update_price_from_supra<T>(
-        bucket_oracle: &mut BucketOracle,
-        clock: &Clock,
-        supra_source: &OracleHolder,
-        pair_id: u32,
-    ) {
-        let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
-        let price_collector = single_oracle::issue_price_collector<T>();
-        single_oracle::collect_price_from_supra(single_oracle, &mut price_collector, supra_source, pair_id);
-        single_oracle::update_oracle_price(single_oracle, clock, price_collector);
-    }
+    // public entry fun update_price_from_supra<T>(
+    //     bucket_oracle: &mut BucketOracle,
+    //     clock: &Clock,
+    //     supra_source: &OracleHolder,
+    //     pair_id: u32,
+    // ) {
+    //     let single_oracle = borrow_single_oracle_mut<T>(bucket_oracle);
+    //     let price_collector = single_oracle::issue_price_collector<T>();
+    //     single_oracle::collect_price_from_supra(single_oracle, &mut price_collector, supra_source, pair_id);
+    //     single_oracle::update_oracle_price(single_oracle, clock, price_collector);
+    // }
 
     // >>>>>>>>>>>>>> Derivative >>>>>>>>>>>>>>
 

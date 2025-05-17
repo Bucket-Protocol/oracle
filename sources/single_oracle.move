@@ -4,42 +4,38 @@ module bucket_oracle::single_oracle {
     use sui::tx_context::TxContext;
     use sui::clock::{Self, Clock};
     use sui::dynamic_field as df;
-    use sui::coin::Coin;
-    use sui::sui::SUI;
-    use sui::event;
     use std::option::{Self, Option};
-    use std::ascii::String;
-    use std::type_name;
+    // use std::ascii::String;
     use bucket_oracle::price_aggregator::{Self, PriceInfo};
 
-    struct ParsePriceEvent has drop, copy {
-        coin_type: String,
-        source_id: u8,
-        price_info: Option<PriceInfo>,
-    }
+    // struct ParsePriceEvent has drop, copy {
+    //     coin_type: String,
+    //     source_id: u8,
+    //     price_info: Option<PriceInfo>,
+    // }
 
     // switchboard
-    use switchboard_std::aggregator::Aggregator;
+    // use switchboard_std::aggregator::Aggregator;
 
     // pyth
-    use wormhole::state::{State as WormholeState};
-    use pyth::state::{State as PythState};
-    use pyth::price_info::PriceInfoObject;
+    // use wormhole::state::{State as WormholeState};
+    // use pyth::state::{State as PythState};
+    // use pyth::price_info::PriceInfoObject;
 
     // supra
-    use SupraOracle::SupraSValueFeed::OracleHolder;
+    // use SupraOracle::SupraSValueFeed::OracleHolder;
 
     // parsers
-    use bucket_oracle::switchboard_parser;
-    use bucket_oracle::pyth_parser;
-    use bucket_oracle::supra_parser;
+    // use bucket_oracle::switchboard_parser;
+    // use bucket_oracle::pyth_parser;
+    // use bucket_oracle::supra_parser;
 
     friend bucket_oracle::bucket_oracle;
 
     const TOLERANCE_MS_OF_GET_PRICE: u64 = 10_000;
 
-    const ENoSourceConfig: u64 = 0;
-    const EWrongSourceConfig: u64 = 1;
+    // const ENoSourceConfig: u64 = 0;
+    // const EWrongSourceConfig: u64 = 1;
     const EPriceOutdated: u64 = 2;
     const EInvalidUpdateRule: u64 = 3;
 
@@ -69,24 +65,25 @@ module bucket_oracle::single_oracle {
         precision_decimal: u8,
         tolerance_ms: u64,
         threshold: u64,
-        switchboard_config: Option<address>,
-        pyth_config: Option<address>,
-        supra_config: Option<u32>,
+        price: u64,
+        // switchboard_config: Option<address>,
+        // pyth_config: Option<address>,
+        // supra_config: Option<u32>,
         ctx: &mut TxContext,
     ): SingleOracle<T> {
-        let switchboard_config = switchboard_parser::parse_config(switchboard_config);
-        let pyth_config = pyth_parser::parse_config(pyth_config);
+        // let switchboard_config = switchboard_parser::parse_config(switchboard_config);
+        // let pyth_config = pyth_parser::parse_config(pyth_config);
         SingleOracle {
             id: object::new(ctx),
-            price: 0,
+            price: price,
             precision_decimal,
             tolerance_ms,
             threshold,
             precision: std::u64::pow(10, precision_decimal),
             latest_update_ms: 0,
-            switchboard_config,
-            pyth_config,
-            supra_config,
+            switchboard_config: option::none(),
+            pyth_config: option::none(),
+            supra_config: option::none(),
         }
     }
 
@@ -105,25 +102,25 @@ module bucket_oracle::single_oracle {
     //
     ////////////////////////////////////////////////////////////////////////
 
-    public(friend) fun update_switchboard_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
-        let config = switchboard_parser::parse_config(config);
-        oracle.switchboard_config = config;
-    }
+    // public(friend) fun update_switchboard_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
+    //     let config = switchboard_parser::parse_config(config);
+    //     oracle.switchboard_config = config;
+    // }
 
-    public fun collect_price_from_switchboard<T>(
-        oracle: &SingleOracle<T>,
-        // collector
-        price_collector: &mut PriceCollector<T>,
-        // switchboard input
-        source: &Aggregator,
-    ) {
-        assert!(option::is_some(&oracle.switchboard_config), ENoSourceConfig);
-        assert!(option::borrow(&oracle.switchboard_config) == &object::id(source), EWrongSourceConfig);
-        let price_info = switchboard_parser::parse_price(source, oracle.precision_decimal);
-        let coin_type = type_name::into_string(type_name::get<T>());
-        event::emit(ParsePriceEvent { coin_type, source_id: 0, price_info });
-        price_collector.switchboard_result = price_info;
-    }
+    // public fun collect_price_from_switchboard<T>(
+    //     oracle: &SingleOracle<T>,
+    //     // collector
+    //     price_collector: &mut PriceCollector<T>,
+    //     // switchboard input
+    //     source: &Aggregator,
+    // ) {
+    //     assert!(option::is_some(&oracle.switchboard_config), ENoSourceConfig);
+    //     assert!(option::borrow(&oracle.switchboard_config) == &object::id(source), EWrongSourceConfig);
+    //     let price_info = switchboard_parser::parse_price(source, oracle.precision_decimal);
+    //     let coin_type = type_name::into_string(type_name::get<T>());
+    //     event::emit(ParsePriceEvent { coin_type, source_id: 0, price_info });
+    //     price_collector.switchboard_result = price_info;
+    // }
 
     ////////////////////////////////////////////////////////////////////////
     //
@@ -131,47 +128,47 @@ module bucket_oracle::single_oracle {
     //
     ////////////////////////////////////////////////////////////////////////
 
-    public(friend) fun update_pyth_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
-        let config = pyth_parser::parse_config(config);
-        oracle.pyth_config = config;
-    }
+    // public(friend) fun update_pyth_config<T>(oracle: &mut SingleOracle<T>, config: Option<address>) {
+    //     let config = pyth_parser::parse_config(config);
+    //     oracle.pyth_config = config;
+    // }
 
-    public fun collect_price_from_pyth<T>(
-        oracle: &SingleOracle<T>,
-        // collector
-        price_collector: &mut PriceCollector<T>,
-        // pyth inputs
-        clock: &Clock,
-        wormhole_state: &WormholeState,
-        pyth_state: &PythState,
-        price_info_object: &mut PriceInfoObject,
-        buf: vector<u8>,
-        fee: Coin<SUI>,
-    ) {
-        assert!(option::is_some(&oracle.pyth_config), ENoSourceConfig);
-        assert!(option::borrow(&oracle.pyth_config) == &object::id(price_info_object), EWrongSourceConfig);
-        let price_info = pyth_parser::parse_price(wormhole_state, pyth_state, clock, price_info_object, buf, fee, oracle.precision_decimal);
-        let coin_type = type_name::into_string(type_name::get<T>());
-        event::emit(ParsePriceEvent { coin_type, source_id: 1, price_info});
-        price_collector.pyth_result = price_info;
-    }
+    // public fun collect_price_from_pyth<T>(
+    //     oracle: &SingleOracle<T>,
+    //     // collector
+    //     price_collector: &mut PriceCollector<T>,
+    //     // pyth inputs
+    //     clock: &Clock,
+    //     wormhole_state: &WormholeState,
+    //     pyth_state: &PythState,
+    //     price_info_object: &mut PriceInfoObject,
+    //     buf: vector<u8>,
+    //     fee: Coin<SUI>,
+    // ) {
+    //     assert!(option::is_some(&oracle.pyth_config), ENoSourceConfig);
+    //     assert!(option::borrow(&oracle.pyth_config) == &object::id(price_info_object), EWrongSourceConfig);
+    //     let price_info = pyth_parser::parse_price(wormhole_state, pyth_state, clock, price_info_object, buf, fee, oracle.precision_decimal);
+    //     let coin_type = type_name::into_string(type_name::get<T>());
+    //     event::emit(ParsePriceEvent { coin_type, source_id: 1, price_info});
+    //     price_collector.pyth_result = price_info;
+    // }
 
-    public fun collect_price_from_pyth_read_only<T>(
-        oracle: &SingleOracle<T>,
-        // collector
-        price_collector: &mut PriceCollector<T>,
-        // pyth inputs
-        clock: &Clock,
-        pyth_state: &PythState,
-        price_info_object: &mut PriceInfoObject,
-    ) {
-        assert!(option::is_some(&oracle.pyth_config), ENoSourceConfig);
-        assert!(option::borrow(&oracle.pyth_config) == &object::id(price_info_object), EWrongSourceConfig);
-        let price_info = pyth_parser::parse_price_read_only(pyth_state, clock, price_info_object,oracle.precision_decimal);
-        let coin_type = type_name::into_string(type_name::get<T>());
-        event::emit(ParsePriceEvent { coin_type, source_id: 1, price_info});
-        price_collector.pyth_result = price_info;
-    }
+    // public fun collect_price_from_pyth_read_only<T>(
+    //     oracle: &SingleOracle<T>,
+    //     // collector
+    //     price_collector: &mut PriceCollector<T>,
+    //     // pyth inputs
+    //     clock: &Clock,
+    //     pyth_state: &PythState,
+    //     price_info_object: &mut PriceInfoObject,
+    // ) {
+    //     assert!(option::is_some(&oracle.pyth_config), ENoSourceConfig);
+    //     assert!(option::borrow(&oracle.pyth_config) == &object::id(price_info_object), EWrongSourceConfig);
+    //     let price_info = pyth_parser::parse_price_read_only(pyth_state, clock, price_info_object,oracle.precision_decimal);
+    //     let coin_type = type_name::into_string(type_name::get<T>());
+    //     event::emit(ParsePriceEvent { coin_type, source_id: 1, price_info});
+    //     price_collector.pyth_result = price_info;
+    // }
 
     ////////////////////////////////////////////////////////////////////////
     //
@@ -179,25 +176,25 @@ module bucket_oracle::single_oracle {
     //
     ////////////////////////////////////////////////////////////////////////
 
-    public(friend) fun update_supra_config<T>(oracle: &mut SingleOracle<T>, config: Option<u32>) {
-        oracle.supra_config = config;
-    }
+    // public(friend) fun update_supra_config<T>(oracle: &mut SingleOracle<T>, config: Option<u32>) {
+    //     oracle.supra_config = config;
+    // }
 
-    public fun collect_price_from_supra<T>(
-        oracle: &SingleOracle<T>,
-        // collector
-        price_collector: &mut PriceCollector<T>,
-        // supra inputs
-        source: &OracleHolder,
-        pair_id: u32,
-    ) {
-        assert!(option::is_some(&oracle.supra_config), ENoSourceConfig);
-        assert!(*option::borrow(&oracle.supra_config) == pair_id, EWrongSourceConfig);
-        let price_info = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
-        let coin_type = type_name::into_string(type_name::get<T>());
-        event::emit(ParsePriceEvent { coin_type, source_id: 2, price_info });
-        price_collector.supra_result = price_info;
-    }
+    // public fun collect_price_from_supra<T>(
+    //     oracle: &SingleOracle<T>,
+    //     // collector
+    //     price_collector: &mut PriceCollector<T>,
+    //     // supra inputs
+    //     source: &OracleHolder,
+    //     pair_id: u32,
+    // ) {
+    //     assert!(option::is_some(&oracle.supra_config), ENoSourceConfig);
+    //     assert!(*option::borrow(&oracle.supra_config) == pair_id, EWrongSourceConfig);
+    //     let price_info = supra_parser::parse_price(source, pair_id, oracle.precision_decimal);
+    //     let coin_type = type_name::into_string(type_name::get<T>());
+    //     event::emit(ParsePriceEvent { coin_type, source_id: 2, price_info });
+    //     price_collector.supra_result = price_info;
+    // }
 
     ////////////////////////////////////////////////////////////////////////
     //

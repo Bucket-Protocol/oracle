@@ -2,28 +2,16 @@
 
 [move]
 version = 3
-manifest_digest = "05FDC0BF43E23087D0717693C3FBB10B8D5BC6F55BE1AD7643CD366FF9B9E7DF"
-deps_digest = "F9B494B64F0615AED0E98FC12A85B85ECD2BC5185C22D30E7F67786BB52E507C"
+manifest_digest = "0B667EAB5945D14EBEA7CD55A12D25A6CC8BEF5FF2648A94ABE811ED7871CCD9"
+deps_digest = "F8BBB0CCB2491CA29A3DF03D6F92277A4F3574266507ACD77214D37ECA3F3082"
 
 dependencies = [
-  { id = "Pyth", name = "Pyth" },
   { id = "Sui", name = "Sui" },
-  { id = "SupraOracle", name = "SupraOracle" },
-  { id = "SwitchboardStdLib", name = "SwitchboardStdLib" },
 ]
 
 [[move.package]]
 id = "MoveStdlib"
 source = { git = "https://github.com/MystenLabs/sui.git", rev = "framework/mainnet", subdir = "crates/sui-framework/packages/move-stdlib" }
-
-[[move.package]]
-id = "Pyth"
-source = { local = "partners/pyth" }
-
-dependencies = [
-  { id = "Sui", name = "Sui" },
-  { id = "Wormhole", name = "Wormhole" },
-]
 
 [[move.package]]
 id = "Sui"
@@ -33,32 +21,15 @@ dependencies = [
   { id = "MoveStdlib", name = "MoveStdlib" },
 ]
 
-[[move.package]]
-id = "SupraOracle"
-source = { local = "partners/supra" }
-
-dependencies = [
-  { id = "Sui", name = "Sui" },
-]
-
-[[move.package]]
-id = "SwitchboardStdLib"
-source = { local = "partners/switchboard" }
-
-dependencies = [
-  { id = "MoveStdlib", name = "MoveStdlib" },
-  { id = "Sui", name = "Sui" },
-]
-
-[[move.package]]
-id = "Wormhole"
-source = { local = "partners/pyth/wormhole" }
-
-dependencies = [
-  { id = "Sui", name = "Sui" },
-]
-
 [move.toolchain-version]
-compiler-version = "1.48.0"
+compiler-version = "1.48.1"
 edition = "2024"
 flavor = "sui"
+
+[env]
+
+[env.testnet]
+chain-id = "4c78adac"
+original-published-id = "0x1a83cd659f15c6d67556b494bfcf2278878170db3904bcf12ea7f71a2d2cd82a"
+latest-published-id = "0x1a83cd659f15c6d67556b494bfcf2278878170db3904bcf12ea7f71a2d2cd82a"
+published-version = "1"
