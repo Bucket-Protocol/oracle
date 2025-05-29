@@ -46,7 +46,7 @@ module bucket_oracle::bucket_oracle {
 
     const PACKAGE_VERSION: u64 = 1;
 
-    struct AdminCap has key, store { id: UID }
+    struct AdminCap has key{ id: UID }
 
     struct BucketOracle has key {
         id: UID,
@@ -155,6 +155,13 @@ module bucket_oracle::bucket_oracle {
     ) {
         let oracle = borrow_single_oracle_mut<T>(bucket_oracle);
         single_oracle::update_threshold(oracle, threshold);
+    }
+
+    public fun transfer(
+        admin_cap: AdminCap,
+        to: address
+    ){
+        transfer::transfer(admin_cap, to);
     }
 
     // public entry fun update_switchboard_config<T>(

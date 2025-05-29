@@ -3,10 +3,10 @@ Aggregate price from Switchboard, Pyth and Supra on Sui.
 
 ## Deployment
 * Package Id: 
-```0xcd60e9c639678b433c1a0b0bab5aa79f259eb027c483edd4f1847e3bcefb7d1b```
+```0xe4d1d319ff9e18d83a909c85837609bcb3ade3618b455a633542ea13b9d501b7```
 * BucketOracle Object Id
-```0xfae9794d4c7a939033b368ff11f9acaa566a445dc7e6ae1f1534a4ffddd9acef```
+```0xbb3cb91b89494abd780bfe888d3cd4fc185545f0792fa224be507e135d865010```
 * Upgrade Cap Object Id
-```0xd8cb75df5f1d4e15584544ed0126ba755ac70a9e02ce08b75df5bb313581b75a```
+```0xf26a75f3dd0badd3edfb3ad726f4fe9c7e0e19dd92cf77ad3894eda6bffe4865```
 * Admin Cap Object Id
-```0x7734d5d6e7db3a7d48380c77debf2a021dfbd4cec2c9503c19debb3db7cdce06```
+```0xc32134db1cf11ef3258482d7452bd0599570dae5151a786cca668bd3b4d2c1b5```
