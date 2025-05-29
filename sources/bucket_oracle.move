@@ -46,7 +46,7 @@ module bucket_oracle::bucket_oracle {
 
     const PACKAGE_VERSION: u64 = 1;
 
-    struct AdminCap has key { id: UID }
+    struct AdminCap has key, store { id: UID }
 
     struct BucketOracle has key {
         id: UID,
@@ -64,7 +64,9 @@ module bucket_oracle::bucket_oracle {
         //     6,
         //     3600_000,
         //     1,
-            
+        //     option::some(SUI_SWITCHBOARD_CONFIG),
+        //     option::some(SUI_PYTH_CONFIG),
+        //     option::some(SUI_SUPRA_CONFIG),
         //     ctx,
         // );
         // create_single_oracle<WBTC>(
