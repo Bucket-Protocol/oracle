@@ -11,6 +11,6 @@ Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-fram
 # SupraOracle = { local = "./partners/supra" }
 
 [addresses]
-bucket_oracle = "0x0"
-# bucket_oracle = "0x1a83cd659f15c6d67556b494bfcf2278878170db3904bcf12ea7f71a2d2cd82a"
+# bucket_oracle = "0x0"
+bucket_oracle = "0x1a83cd659f15c6d67556b494bfcf2278878170db3904bcf12ea7f71a2d2cd82a"
 sui =  "0000000000000000000000000000000000000000000000000000000000000002"
