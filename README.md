@@ -4,7 +4,7 @@ Aggregate price from Switchboard, Pyth and Supra on Sui.
 ## Mainnet
 Package ID
 ```
-0xf1bfcf3823bf418877c09e9dae54ec0e9edafebbf567af15812eb3ea116fbd07
+0x7d861b0e12694e099aba07b1fb49349abb06c96294739b5487b8d8261a60e17d
 ```
 Bucket Oracle ID, init_shared_version: `5174506`
 ```

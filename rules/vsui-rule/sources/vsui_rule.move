@@ -3,7 +3,7 @@ module vsui_rule::vsui_rule {
     use sui::sui::SUI;
     use sui::clock::Clock;
     use volo::cert::{CERT, Metadata};
-    use volo::native_pool::{Self, NativePool};
+    use volo::stake_pool::{StakePool};
     use bucket_oracle::bucket_oracle::{Self as bo, BucketOracle};
     use bucket_oracle::single_oracle as so;
 
@@ -11,12 +11,12 @@ module vsui_rule::vsui_rule {
 
     public fun update_price(
         oracle: &mut BucketOracle,
-        native_pool: &NativePool,
+        stake_pool: &StakePool,
         metadata: &Metadata<CERT>,
         clock: &Clock,
     ) {
         let (sui_price, sui_precision) = bo::get_price<SUI>(oracle, clock);
-        let vsui_price = native_pool::from_shares(native_pool, metadata, sui_price);
+        let vsui_price = stake_pool.lst_amount_to_sui_amount(metadata, sui_price);
         let vsui_oracle = bo::borrow_single_oracle_mut<CERT>(oracle);
         let vsui_precision = so::precision(vsui_oracle);
         let vsui_price = (vsui_precision as u128) * (vsui_price as u128) / (sui_precision as u128);
