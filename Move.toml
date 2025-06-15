@@ -18,12 +18,12 @@ rev = "main"
 git = "https://github.com/pyth-network/pyth-crosschain.git"
 subdir = "target_chains/sui/contracts"
 rev = "sui-contract-mainnet"
- 
+
 [dependencies.Wormhole]
 git = "https://github.com/wormhole-foundation/wormhole.git"
 subdir = "sui/wormhole"
-rev = "sui-upgrade-mainnet"
- 
+rev = "sui/mainnet"
+
 [dependencies.Sui]
 git = "https://github.com/MystenLabs/sui.git"
 subdir = "crates/sui-framework/packages/sui-framework"
@@ -33,4 +33,4 @@ override = true
 [addresses]
 bucket_oracle = "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc"
 # bucket_oracle = "0x0"
-sui =  "0000000000000000000000000000000000000000000000000000000000000002"
+sui = "0000000000000000000000000000000000000000000000000000000000000002"
