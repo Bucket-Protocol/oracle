@@ -1,13 +1,13 @@
-module pyth::set_stale_price_threshold {
+module pyth_local::set_stale_price_threshold {
     use wormhole::cursor;
     use wormhole::governance_message::{Self, DecreeTicket};
 
-    use pyth::deserialize;
-    use pyth::state::{Self, State, LatestOnly};
-    use pyth::governance_action::{Self};
-    use pyth::governance_witness::{Self, GovernanceWitness};
+    use pyth_local::deserialize;
+    use pyth_local::state::{Self, State, LatestOnly};
+    use pyth_local::governance_action::{Self};
+    use pyth_local::governance_witness::{Self, GovernanceWitness};
 
-    friend pyth::governance;
+    friend pyth_local::governance;
 
     struct StalePriceThreshold {
         threshold: u64,

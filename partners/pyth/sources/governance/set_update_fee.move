@@ -1,15 +1,15 @@
-module pyth::set_update_fee {
+module pyth_local::set_update_fee {
     use sui::math::{Self};
 
     use wormhole::cursor;
     use wormhole::governance_message::{Self, DecreeTicket};
 
-    use pyth::deserialize;
-    use pyth::state::{Self, State, LatestOnly};
-    use pyth::governance_action::{Self};
-    use pyth::governance_witness::{Self, GovernanceWitness};
+    use pyth_local::deserialize;
+    use pyth_local::state::{Self, State, LatestOnly};
+    use pyth_local::governance_action::{Self};
+    use pyth_local::governance_witness::{Self, GovernanceWitness};
 
-    friend pyth::governance;
+    friend pyth_local::governance;
 
     const MAX_U64: u128 = (1 << 64) - 1;
     const E_EXPONENT_DOES_NOT_FIT_IN_U8: u64 = 0;

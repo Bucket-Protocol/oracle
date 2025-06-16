@@ -1,5 +1,5 @@
 module bucket_oracle::bucket_oracle {
-    
+
     use sui::tx_context::{Self, TxContext};
     use sui::object::{Self, UID};
     use sui::transfer;
@@ -13,8 +13,8 @@ module bucket_oracle::bucket_oracle {
     use switchboard_std::aggregator::Aggregator;
     use SupraOracle::SupraSValueFeed::OracleHolder;
     use wormhole::state::{State as WormholeState};
-    use pyth::state::{State as PythState};
-    use pyth::price_info::PriceInfoObject;
+    use pyth_local::state::{State as PythState};
+    use pyth_local::price_info::PriceInfoObject;
 
     // Supra OracleHolder
     // 0xaa0315f0748c1f24ddb2b45f7939cff40f7a8104af5ccbc4a1d32f870c0b4105
@@ -33,7 +33,7 @@ module bucket_oracle::bucket_oracle {
     // const ETH_SWITCHBOARD_CONFIG: address = @0x68ed81c5dd07d12c629e5cdad291ca004a5cd3708d5659cb0b6bfe983e14778c;
     // const ETH_PYTH_CONFIG: address = @0x8deeebad0a8fb86d97e6ad396cc84639da5a52ae4bbc91c78eb7abbf3e641ed6;
     // const ETH_SUPRA_CONFIG: u32 = 19;
-    
+
     // USDT
     // const USDT_SWITCHBOARD_CONFIG: address = @0xe8a09db813c07b0a30c9026b3ff7d5617d2505a097f1a90a06a941d34bee9585;
     // const USDT_PYTH_CONFIG: address = @0x83f74b8a33b540cbf1edd24e219eac1215d1668a711ca2be3aa5d703763f91db;
@@ -139,7 +139,7 @@ module bucket_oracle::bucket_oracle {
     ) {
         dof::add<PriceType<T>, SingleOracle<T>>(
             &mut bucket_oracle.id,
-            PriceType<T> {}, 
+            PriceType<T> {},
             single_oracle::new(
                 precision_decimal,
                 tolerance_ms,

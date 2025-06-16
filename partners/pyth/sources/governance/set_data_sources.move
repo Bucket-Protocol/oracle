@@ -1,4 +1,4 @@
-module pyth::set_data_sources {
+module pyth_local::set_data_sources {
     use std::vector;
 
     use wormhole::cursor;
@@ -6,13 +6,13 @@ module pyth::set_data_sources {
     use wormhole::bytes32::{Self};
     use wormhole::governance_message::{Self, DecreeTicket};
 
-    use pyth::deserialize;
-    use pyth::data_source::{Self, DataSource};
-    use pyth::state::{Self, State, LatestOnly};
-    use pyth::governance_action::{Self};
-    use pyth::governance_witness::{Self, GovernanceWitness};
+    use pyth_local::deserialize;
+    use pyth_local::data_source::{Self, DataSource};
+    use pyth_local::state::{Self, State, LatestOnly};
+    use pyth_local::governance_action::{Self};
+    use pyth_local::governance_witness::{Self, GovernanceWitness};
 
-    friend pyth::governance;
+    friend pyth_local::governance;
 
     struct DataSources {
         sources: vector<DataSource>,

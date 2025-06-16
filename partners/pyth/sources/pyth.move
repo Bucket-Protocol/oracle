@@ -1,4 +1,4 @@
-module pyth::pyth {
+module pyth_local::pyth {
     use std::vector;
     use sui::tx_context::{TxContext};
     use sui::coin::{Self, Coin};
@@ -7,16 +7,16 @@ module pyth::pyth {
     use sui::clock::{Self, Clock};
     use sui::package::{UpgradeCap};
 
-    use pyth::event::{Self as pyth_event};
-    use pyth::data_source::{Self, DataSource};
-    use pyth::state::{Self as state, State as PythState, LatestOnly};
-    use pyth::price_info::{Self, PriceInfo, PriceInfoObject};
-    use pyth::batch_price_attestation::{Self};
-    use pyth::price_feed::{Self};
-    use pyth::price::{Self, Price};
-    use pyth::price_identifier::{PriceIdentifier};
-    use pyth::setup::{Self, DeployerCap};
-    use pyth::hot_potato_vector::{Self, HotPotatoVector};
+    use pyth_local::event::{Self as pyth_event};
+    use pyth_local::data_source::{Self, DataSource};
+    use pyth_local::state::{Self as state, State as PythState, LatestOnly};
+    use pyth_local::price_info::{Self, PriceInfo, PriceInfoObject};
+    use pyth_local::batch_price_attestation::{Self};
+    use pyth_local::price_feed::{Self};
+    use pyth_local::price::{Self, Price};
+    use pyth_local::price_identifier::{PriceIdentifier};
+    use pyth_local::setup::{Self, DeployerCap};
+    use pyth_local::hot_potato_vector::{Self, HotPotatoVector};
 
     use wormhole::external_address::{Self};
     use wormhole::vaa::{Self, VAA};
@@ -30,7 +30,7 @@ module pyth::pyth {
     const E_PRICE_UPDATE_NOT_FOUND_FOR_PRICE_INFO_OBJECT: u64 = 5;
 
     #[test_only]
-    friend pyth::pyth_tests;
+    friend pyth_local::pyth_tests;
 
     /// Init state and emit event corresponding to Pyth initialization.
     public entry fun init_pyth(
@@ -336,7 +336,7 @@ module pyth::pyth {
 }
 
 #[test_only]
-module pyth::pyth_tests{
+module pyth_local::pyth_tests{
     use std::vector::{Self};
 
     use sui::sui::SUI;
@@ -346,16 +346,16 @@ module pyth::pyth_tests{
     use sui::object::{Self, ID};
     use sui::clock::{Self, Clock};
 
-    use pyth::state::{State as PythState};
-    use pyth::setup::{Self};
-    //use pyth::price_identifier::{Self};
-    use pyth::price_info::{PriceInfo, PriceInfoObject};//, PriceInfo, PriceInfoObject};
-    //use pyth::price_feed::{Self};
-    use pyth::data_source::{Self, DataSource};
-    //use pyth::i64::{Self};
-    //use pyth::price::{Self};
-    use pyth::pyth::{Self, create_price_infos_hot_potato, update_single_price_feed};
-    use pyth::hot_potato_vector::{Self};
+    use pyth_local::state::{State as PythState};
+    use pyth_local::setup::{Self};
+    //use pyth_local::price_identifier::{Self};
+    use pyth_local::price_info::{PriceInfo, PriceInfoObject};//, PriceInfo, PriceInfoObject};
+    //use pyth_local::price_feed::{Self};
+    use pyth_local::data_source::{Self, DataSource};
+    //use pyth_local::i64::{Self};
+    //use pyth_local::price::{Self};
+    use pyth::pyth_local::{Self, create_price_infos_hot_potato, update_single_price_feed};
+    use pyth_local::hot_potato_vector::{Self};
 
     use wormhole::setup::{Self as wormhole_setup, DeployerCap};
     use wormhole::external_address::{Self};
@@ -557,7 +557,7 @@ module pyth::pyth_tests{
     //         x"fb1543888001083cf2e6ef3afdcf827e89b11efd87c563638df6e1995ada9f93",
     //     ];
 
-    //     assert!(pyth::get_total_update_fee(&pyth_state, vector::length<vector<u8>>(&single_vaa)) == single_update_fee, 1);
+    //     assert!(pyth_local::get_total_update_fee(&pyth_state, vector::length<vector<u8>>(&single_vaa)) == single_update_fee, 1);
 
     //     let multiple_vaas = vector[
     //         x"4ee17a1a4524118de513fddcf82b77454e51be5d6fc9e29fc72dd6c204c0e4fa",
@@ -568,7 +568,7 @@ module pyth::pyth_tests{
     //     ];
 
     //     // Pass in multiple VAAs
-    //     assert!(pyth::get_total_update_fee(&pyth_state, vector::length<vector<u8>>(&multiple_vaas)) == 250, 1);
+    //     assert!(pyth_local::get_total_update_fee(&pyth_state, vector::length<vector<u8>>(&multiple_vaas)) == 250, 1);
 
     //     return_shared(pyth_state);
     //     coin::burn_for_testing<SUI>(test_coins);
@@ -588,7 +588,7 @@ module pyth::pyth_tests{
         let corrupt_vaa = x"90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
         let verified_vaas = vector[vaa::parse_and_verify(&worm_state, corrupt_vaa, &clock)];
         // Create Pyth price feed
-        pyth::create_price_feeds(
+        pyth_local::create_price_feeds(
             &mut pyth_state,
             verified_vaas,
             &clock,
@@ -603,7 +603,7 @@ module pyth::pyth_tests{
     }
 
     // #[test]
-    // #[expected_failure(abort_code = pyth::pyth::E_INVALID_DATA_SOURCE)]
+    // #[expected_failure(abort_code = pyth::pyth_local::E_INVALID_DATA_SOURCE)]
     // fun test_create_price_feeds_invalid_data_source() {
     //     // Initialize the contract with some valid data sources, excluding our test VAA's source
     //     let data_sources = vector<DataSource>[
@@ -623,7 +623,7 @@ module pyth::pyth_tests{
 
     //     let verified_vaas = get_verified_test_vaas(&worm_state, &clock);
 
-    //     pyth::create_price_feeds(
+    //     pyth_local::create_price_feeds(
     //         &mut pyth_state,
     //         verified_vaas,
     //         &clock,
@@ -666,7 +666,7 @@ module pyth::pyth_tests{
 
         test_scenario::next_tx(&mut scenario, DEPLOYER);
 
-        pyth::create_price_feeds(
+        pyth_local::create_price_feeds(
             &mut pyth_state,
             verified_vaas,
             &clock,
@@ -729,7 +729,7 @@ module pyth::pyth_tests{
     }
 
     // #[test]
-    // #[expected_failure(abort_code = pyth::pyth::E_PRICE_INFO_OBJECT_NOT_FOUND)]
+    // #[expected_failure(abort_code = pyth::pyth_local::E_PRICE_INFO_OBJECT_NOT_FOUND)]
     // fun test_create_and_update_price_feeds_price_info_object_not_found_failure() {
     //     let data_sources = data_sources_for_test_vaa();
     //     let base_update_fee = 50;
@@ -742,7 +742,7 @@ module pyth::pyth_tests{
     //     let worm_state = take_shared<WormState>(&scenario);
     //     let verified_vaas = get_verified_test_vaas(&worm_state, &clock);
 
-    //     pyth::create_price_feeds(
+    //     pyth_local::create_price_feeds(
     //         &mut pyth_state,
     //         verified_vaas,
     //         &clock,
@@ -767,7 +767,7 @@ module pyth::pyth_tests{
     //     let price_info_object_vec = vector[price_info_object_1, price_info_object_2, price_info_object_3];
     //     let verified_vaas = get_verified_test_vaas(&worm_state, &clock);
 
-    //     pyth::update_price_feeds(
+    //     pyth_local::update_price_feeds(
     //         &mut pyth_state,
     //         verified_vaas,
     //         &mut price_info_object_vec,
@@ -792,7 +792,7 @@ module pyth::pyth_tests{
     // }
 
     // #[test]
-    // #[expected_failure(abort_code = pyth::pyth::E_INSUFFICIENT_FEE)]
+    // #[expected_failure(abort_code = pyth::pyth_local::E_INSUFFICIENT_FEE)]
     // fun test_create_and_update_price_feeds_insufficient_fee() {
     //     let data_sources = data_sources_for_test_vaa();
     //     let base_update_fee = 50;
@@ -806,7 +806,7 @@ module pyth::pyth_tests{
 
     //     let verified_vaas = get_verified_test_vaas(&worm_state, &clock);
 
-    //     pyth::create_price_feeds(
+    //     pyth_local::create_price_feeds(
     //         &mut pyth_state,
     //         verified_vaas,
     //         &clock,
@@ -820,7 +820,7 @@ module pyth::pyth_tests{
 
     //     verified_vaas = get_verified_test_vaas(&worm_state, &clock);
 
-    //     pyth::update_price_feeds(
+    //     pyth_local::update_price_feeds(
     //         &mut pyth_state,
     //         verified_vaas,
     //         &mut price_info_object_vec,
@@ -852,7 +852,7 @@ module pyth::pyth_tests{
     //     let verified_vaas = get_verified_test_vaas(&worm_state, &clock);
 
     //     // Update cache is called by create_price_feeds.
-    //     pyth::create_price_feeds(
+    //     pyth_local::create_price_feeds(
     //         &mut pyth_state,
     //         verified_vaas,
     //         &clock,
@@ -910,7 +910,7 @@ module pyth::pyth_tests{
     //     let worm_state = take_shared<WormState>(&scenario);
     //     let verified_vaas = get_verified_test_vaas(&worm_state, &clock);
 
-    //     pyth::create_price_feeds(
+    //     pyth_local::create_price_feeds(
     //         &mut pyth_state,
     //         verified_vaas,
     //         &clock,
@@ -950,7 +950,7 @@ module pyth::pyth_tests{
     //                 old_ema_price,
     //         )
     //     );
-    //     pyth::update_cache(vector<PriceInfo>[old_update], &mut price_info_object_vec, &clock);
+    //     pyth_local::update_cache(vector<PriceInfo>[old_update], &mut price_info_object_vec, &clock);
 
     //     price_info_object_4 = vector::pop_back(&mut price_info_object_vec);
     //     price_info_object_3 = vector::pop_back(&mut price_info_object_vec);
@@ -991,7 +991,7 @@ module pyth::pyth_tests{
     //         price_info_object_4
     //     ];
 
-    //     pyth::update_cache(vector<PriceInfo>[fresh_update], &mut price_info_object_vec, &clock);
+    //     pyth_local::update_cache(vector<PriceInfo>[fresh_update], &mut price_info_object_vec, &clock);
 
     //     price_info_object_4 = vector::pop_back(&mut price_info_object_vec);
     //     price_info_object_3 = vector::pop_back(&mut price_info_object_vec);

@@ -1,13 +1,13 @@
-module pyth::set_fee_recipient {
+module pyth_local::set_fee_recipient {
     use wormhole::cursor;
     use wormhole::external_address::{Self};
     use wormhole::governance_message::{Self, DecreeTicket};
 
-    use pyth::state::{Self, State, LatestOnly};
-    use pyth::governance_action::{Self};
-    use pyth::governance_witness::{Self, GovernanceWitness};
+    use pyth_local::state::{Self, State, LatestOnly};
+    use pyth_local::governance_action::{Self};
+    use pyth_local::governance_witness::{Self, GovernanceWitness};
 
-    friend pyth::governance;
+    friend pyth_local::governance;
 
     struct PythFeeRecipient {
         recipient: address

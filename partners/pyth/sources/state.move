@@ -1,32 +1,32 @@
-module pyth::state {
+module pyth_local::state {
     use std::vector;
     use sui::object::{Self, UID, ID};
     use sui::tx_context::{Self, TxContext};
     use sui::package::{UpgradeCap, UpgradeTicket, UpgradeReceipt};
 
-    use pyth::data_source::{Self, DataSource};
-    use pyth::price_info::{Self};
-    use pyth::price_identifier::{Self, PriceIdentifier};
-    use pyth::version_control::{Self};
+    use pyth_local::data_source::{Self, DataSource};
+    use pyth_local::price_info::{Self};
+    use pyth_local::price_identifier::{Self, PriceIdentifier};
+    use pyth_local::version_control::{Self};
 
     use wormhole::consumed_vaas::{Self, ConsumedVAAs};
     use wormhole::bytes32::{Self, Bytes32};
     use wormhole::package_utils::{Self};
     use wormhole::external_address::{ExternalAddress};
 
-    friend pyth::pyth;
+    friend pyth_local::pyth;
     #[test_only]
-    friend pyth::pyth_tests;
-    friend pyth::governance_action;
-    friend pyth::set_update_fee;
-    friend pyth::set_stale_price_threshold;
-    friend pyth::set_data_sources;
-    friend pyth::governance;
-    friend pyth::set_governance_data_source;
-    friend pyth::migrate;
-    friend pyth::contract_upgrade;
-    friend pyth::set_fee_recipient;
-    friend pyth::setup;
+    friend pyth_local::pyth_tests;
+    friend pyth_local::governance_action;
+    friend pyth_local::set_update_fee;
+    friend pyth_local::set_stale_price_threshold;
+    friend pyth_local::set_data_sources;
+    friend pyth_local::governance;
+    friend pyth_local::set_governance_data_source;
+    friend pyth_local::migrate;
+    friend pyth_local::contract_upgrade;
+    friend pyth_local::set_fee_recipient;
+    friend pyth_local::setup;
 
     /// Build digest does not agree with current implementation.
     const E_INVALID_BUILD_DIGEST: u64 = 0;

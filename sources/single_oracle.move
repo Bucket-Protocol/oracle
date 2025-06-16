@@ -23,8 +23,8 @@ module bucket_oracle::single_oracle {
 
     // pyth
     use wormhole::state::{State as WormholeState};
-    use pyth::state::{State as PythState};
-    use pyth::price_info::PriceInfoObject;
+    use pyth_local::state::{State as PythState};
+    use pyth_local::price_info::PriceInfoObject;
 
     // supra
     use SupraOracle::SupraSValueFeed::OracleHolder;

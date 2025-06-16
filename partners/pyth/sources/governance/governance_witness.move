@@ -1,11 +1,11 @@
-module pyth::governance_witness {
+module pyth_local::governance_witness {
 
-    friend pyth::set_data_sources;
-    friend pyth::set_stale_price_threshold;
-    friend pyth::set_update_fee;
-    friend pyth::set_governance_data_source;
-    friend pyth::set_fee_recipient;
-    friend pyth::contract_upgrade;
+    friend pyth_local::set_data_sources;
+    friend pyth_local::set_stale_price_threshold;
+    friend pyth_local::set_update_fee;
+    friend pyth_local::set_governance_data_source;
+    friend pyth_local::set_fee_recipient;
+    friend pyth_local::contract_upgrade;
 
     /// A hot potato that ensures that only DecreeTickets
     /// and DecreeReceipts associated with Sui Pyth governance

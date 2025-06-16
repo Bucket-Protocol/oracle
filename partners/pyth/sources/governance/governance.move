@@ -1,13 +1,13 @@
-module pyth::governance {
-    use pyth::governance_instruction;
-    use pyth::governance_action;
-    use pyth::set_governance_data_source;
-    use pyth::set_data_sources;
-    use pyth::set_stale_price_threshold;
-    use pyth::set_fee_recipient;
-    use pyth::state::{Self, State};
-    use pyth::set_update_fee;
-    use pyth::governance_witness::{GovernanceWitness};
+module pyth_local::governance {
+    use pyth_local::governance_instruction;
+    use pyth_local::governance_action;
+    use pyth_local::set_governance_data_source;
+    use pyth_local::set_data_sources;
+    use pyth_local::set_stale_price_threshold;
+    use pyth_local::set_fee_recipient;
+    use pyth_local::state::{Self, State};
+    use pyth_local::set_update_fee;
+    use pyth_local::governance_witness::{GovernanceWitness};
 
     use wormhole::governance_message::{Self, DecreeReceipt};
 

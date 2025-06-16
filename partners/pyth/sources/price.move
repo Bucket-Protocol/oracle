@@ -1,5 +1,5 @@
-module pyth::price {
-    use pyth::i64::I64;
+module pyth_local::price {
+    use pyth_local::i64::I64;
 
     struct Price has copy, drop, store {
         price: I64,

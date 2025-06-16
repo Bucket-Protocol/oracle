@@ -7,7 +7,7 @@
 /// 2.  Authorize upgrade.
 /// 3.  Upgrade.
 /// 4.  Commit upgrade.
-module pyth::contract_upgrade {
+module pyth_local::contract_upgrade {
     use sui::event::{Self};
     use sui::object::{ID};
     use sui::package::{UpgradeReceipt, UpgradeTicket};
@@ -15,12 +15,12 @@ module pyth::contract_upgrade {
     use wormhole::cursor::{Self};
     use wormhole::governance_message::{Self, DecreeTicket, DecreeReceipt};
 
-    use pyth::state::{Self, State};
-    use pyth::governance_witness::{GovernanceWitness, new_governance_witness};
-    use pyth::governance_instruction::{Self};
-    use pyth::governance_action::{Self};
+    use pyth_local::state::{Self, State};
+    use pyth_local::governance_witness::{GovernanceWitness, new_governance_witness};
+    use pyth_local::governance_instruction::{Self};
+    use pyth_local::governance_action::{Self};
 
-    friend pyth::migrate;
+    friend pyth_local::migrate;
 
     /// Digest is all zeros.
     const E_DIGEST_ZERO_BYTES: u64 = 0;
@@ -140,6 +140,6 @@ module pyth::contract_upgrade {
 }
 
 #[test_only]
-module pyth::upgrade_contract_tests {
+module pyth_local::upgrade_contract_tests {
     // TODO
 }
