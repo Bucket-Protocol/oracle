@@ -2,8 +2,8 @@
 
 [move]
 version = 3
-manifest_digest = "D26A7CF4A270D325885A2CAB8CB43E83A5489D7391F9A91D17181A1C0854E9D3"
-deps_digest = "8227D341C0550A37580C10FA45FE148A465225149C69D179737E0FE454AD6AEC"
+manifest_digest = "B729D6837D0C9705DC1E83C5249E8262A6CDB957A0CC8DBCDDE2E43F23043707"
+deps_digest = "CAFAD8A7CF51067FB4358215BECB86BD100DD64E57C2AC8A7AE7D74B688F5965"
 dependencies = [
   { id = "Bridge", name = "Bridge" },
   { id = "BucketOracle", name = "BucketOracle" },
@@ -11,8 +11,6 @@ dependencies = [
   { id = "Sui", name = "Sui" },
   { id = "SuiSystem", name = "SuiSystem" },
   { id = "SupraOracle", name = "SupraOracle" },
-  { id = "SwitchboardStdLib", name = "SwitchboardStdLib" },
-  { id = "Wormhole", name = "Wormhole" },
   { id = "typus_perp", name = "typus_perp" },
 ]
 
@@ -31,10 +29,14 @@ id = "BucketOracle"
 source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "" }
 
 dependencies = [
+  { id = "Bridge", name = "Bridge" },
+  { id = "MoveStdlib", name = "MoveStdlib" },
   { id = "PythLocal", name = "PythLocal" },
   { id = "Sui", name = "Sui" },
+  { id = "SuiSystem", name = "SuiSystem" },
   { id = "SupraOracle", name = "SupraOracle" },
   { id = "SwitchboardStdLib", name = "SwitchboardStdLib" },
+  { id = "Wormhole", name = "Wormhole" },
 ]
 
 [[move.package]]
@@ -63,7 +65,7 @@ dependencies = [
 
 [[move.package]]
 id = "MathNavi"
-source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "b6cd0a569c836d4d93185780e5401852c3975eb0", subdir = "math" }
+source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "c0215305221f2e383567ca98729c88bba50d01b1", subdir = "math" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
@@ -123,7 +125,7 @@ dependencies = [
 
 [[move.package]]
 id = "SupraOracle"
-source = { git = "https://github.com/naviprotocol/dora-interface.git", rev = "main", subdir = "sui/mainnet/supra_holder" }
+source = { git = "https://github.com/Entropy-Foundation/dora-interface.git", rev = "5fec42547d9d446cc3fdc01754721d5a044462b6", subdir = "sui/mainnet/supra_holder" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
@@ -173,7 +175,7 @@ dependencies = [
 
 [[move.package]]
 id = "lending_core"
-source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "b6cd0a569c836d4d93185780e5401852c3975eb0", subdir = "lending_core" }
+source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "c0215305221f2e383567ca98729c88bba50d01b1", subdir = "lending_core" }
 
 dependencies = [
   { id = "MathNavi", name = "MathNavi" },
@@ -193,7 +195,7 @@ dependencies = [
 
 [[move.package]]
 id = "oracle"
-source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "b6cd0a569c836d4d93185780e5401852c3975eb0", subdir = "oracle" }
+source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "c0215305221f2e383567ca98729c88bba50d01b1", subdir = "oracle" }
 
 dependencies = [
   { id = "Pyth", name = "Pyth" },
@@ -231,7 +233,7 @@ dependencies = [
 
 [[move.package]]
 id = "supra_utils"
-source = { git = "https://github.com/naviprotocol/dora-interface.git", rev = "main", subdir = "sui/mainnet/supra_utils" }
+source = { git = "https://github.com/Entropy-Foundation/dora-interface.git", rev = "5fec42547d9d446cc3fdc01754721d5a044462b6", subdir = "sui/mainnet/supra_utils" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
@@ -239,7 +241,7 @@ dependencies = [
 
 [[move.package]]
 id = "supra_validator"
-source = { git = "https://github.com/naviprotocol/dora-interface.git", rev = "main", subdir = "sui/mainnet/supra_validator" }
+source = { git = "https://github.com/Entropy-Foundation/dora-interface.git", rev = "5fec42547d9d446cc3fdc01754721d5a044462b6", subdir = "sui/mainnet/supra_validator" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
@@ -300,9 +302,11 @@ id = "typus_oracle"
 source = { git = "https://github.com/Typus-Lab/typus-interface.git", rev = "mainnet", subdir = "oracle" }
 
 dependencies = [
+  { id = "Bridge", name = "Bridge" },
   { id = "MoveStdlib", name = "MoveStdlib" },
   { id = "Pyth", name = "Pyth" },
   { id = "Sui", name = "Sui" },
+  { id = "SuiSystem", name = "SuiSystem" },
   { id = "SupraOracle", name = "SupraOracle" },
   { id = "SwitchboardStdLib", name = "SwitchboardStdLib" },
 ]
@@ -312,20 +316,20 @@ id = "typus_perp"
 source = { git = "https://github.com/Typus-Lab/typus-interface.git", rev = "mainnet", subdir = "typus_perp" }
 
 dependencies = [
-  { id = "Bridge", name = "Bridge" },
   { id = "MoveStdlib", name = "MoveStdlib" },
+  { id = "Pyth", name = "Pyth" },
   { id = "Sui", name = "Sui" },
-  { id = "SuiSystem", name = "SuiSystem" },
-  { id = "typus", name = "typus" },
+  { id = "SupraOracle", name = "SupraOracle" },
+  { id = "SwitchboardStdLib", name = "SwitchboardStdLib" },
+  { id = "supra_utils", name = "supra_utils" },
+  { id = "supra_validator", name = "supra_validator" },
   { id = "typus_dov", name = "typus_dov" },
-  { id = "typus_framework", name = "typus_framework" },
-  { id = "typus_nft", name = "typus_nft" },
   { id = "typus_oracle", name = "typus_oracle" },
 ]
 
 [[move.package]]
 id = "utils"
-source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "b6cd0a569c836d4d93185780e5401852c3975eb0", subdir = "utils" }
+source = { git = "https://github.com/Typus-Lab/navi-protocol-interface.git", rev = "c0215305221f2e383567ca98729c88bba50d01b1", subdir = "utils" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
@@ -335,3 +339,11 @@ dependencies = [
 compiler-version = "1.49.2"
 edition = "2024.beta"
 flavor = "sui"
+
+[env]
+
+[env.mainnet]
+chain-id = "35834a8a"
+original-published-id = "0x1f19c4572c45f8e116a6aa6c7ffafc3569a3cea407ad839c43de5898369030ce"
+latest-published-id = "0x1f19c4572c45f8e116a6aa6c7ffafc3569a3cea407ad839c43de5898369030ce"
+published-version = "1"
