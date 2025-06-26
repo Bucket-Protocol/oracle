@@ -118,7 +118,7 @@ module pyth_local::price_info {
         use sui::object::{Self};
         use sui::test_scenario::{Self, ctx};
         use pyth_local::price_identifier::{Self};
-        let scenario = test_scenario::begin(@pyth);
+        let scenario = test_scenario::begin(@pyth_local);
         let uid = object::new(ctx(&mut scenario));
 
         // Create a new price info object registry.

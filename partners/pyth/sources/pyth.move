@@ -354,7 +354,7 @@ module pyth_local::pyth_tests{
     use pyth_local::data_source::{Self, DataSource};
     //use pyth_local::i64::{Self};
     //use pyth_local::price::{Self};
-    use pyth::pyth_local::{Self, create_price_infos_hot_potato, update_single_price_feed};
+    use pyth_local::pyth::{Self, create_price_infos_hot_potato, update_single_price_feed};
     use pyth_local::hot_potato_vector::{Self};
 
     use wormhole::setup::{Self as wormhole_setup, DeployerCap};
@@ -452,7 +452,7 @@ module pyth_local::pyth_tests{
         // Initialize Pyth state.
         let pyth_upgrade_cap=
             package::test_publish(
-                object::id_from_address(@pyth),
+                object::id_from_address(@pyth_local),
                 test_scenario::ctx(&mut scenario)
             );
 
@@ -588,7 +588,7 @@ module pyth_local::pyth_tests{
         let corrupt_vaa = x"90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
         let verified_vaas = vector[vaa::parse_and_verify(&worm_state, corrupt_vaa, &clock)];
         // Create Pyth price feed
-        pyth_local::create_price_feeds(
+        pyth::create_price_feeds(
             &mut pyth_state,
             verified_vaas,
             &clock,
@@ -666,7 +666,7 @@ module pyth_local::pyth_tests{
 
         test_scenario::next_tx(&mut scenario, DEPLOYER);
 
-        pyth_local::create_price_feeds(
+        pyth::create_price_feeds(
             &mut pyth_state,
             verified_vaas,
             &clock,
