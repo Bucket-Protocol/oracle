@@ -39,7 +39,7 @@ module pyth_local::setup {
         // This will be created and sent to the transaction sender
         // automatically when the contract is published.
         transfer::public_transfer(
-            sui::package::test_publish(object::id_from_address(@pyth), ctx),
+            sui::package::test_publish(object::id_from_address(@pyth_local), ctx),
             tx_context::sender(ctx)
         );
     }
