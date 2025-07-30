@@ -6,10 +6,10 @@ edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
 
 [dependencies]
 BucketOracle = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet" }
-Blizzard = { git = "https://github.com/interest-protocol/blizzard-interface.git", subdir = "blizzard", rev = "main" }
-WinterWalrus = { git = "https://github.com/interest-protocol/blizzard-interface.git", subdir = "wwal", rev = "main" }
-Walrus = { git = "https://github.com/MystenLabs/walrus.git", subdir = "contracts/walrus", rev = "mainnet", override = true }
-WAL = { git = "https://github.com/MystenLabs/walrus.git", subdir = "contracts/wal", rev = "mainnet", override = true }
+Blizzard = { git = "https://github.com/interest-protocol/move-interfaces.git", subdir = "winter-walrus/blizzard", rev = "main" }
+WinterWalrus = { git = "https://github.com/interest-protocol/move-interfaces.git", subdir = "winter-walrus/wwal", rev = "main" }
+# Walrus = { git = "https://github.com/MystenLabs/walrus.git", subdir = "contracts/walrus", rev = "mainnet", override = true }
+# WAL = { git = "https://github.com/MystenLabs/walrus.git", subdir = "contracts/wal", rev = "mainnet", override = true }
 
 # For remote import, use the `{ git = "...", subdir = "...", rev = "..." }`.
 # Revision can be a branch, a tag, and a commit hash.

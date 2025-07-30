@@ -2,28 +2,24 @@
 
 [move]
 version = 3
-manifest_digest = "0707FB44589FE5CD8DE4924828E128B4035CE8A50B841E704BCBDEB9D65FD044"
-deps_digest = "CB99E3BEE139471F3765AE330F855F3B376156AA54F37DEDE11BBE5BB0D3BB74"
+manifest_digest = "DE84D66FC5400F9AB3C068679DBE810DA878A61EC8BA02F21276A82951D937A2"
+deps_digest = "CAFAD8A7CF51067FB4358215BECB86BD100DD64E57C2AC8A7AE7D74B688F5965"
 dependencies = [
   { id = "Blizzard", name = "Blizzard" },
   { id = "Bridge", name = "Bridge" },
   { id = "BucketOracle", name = "BucketOracle" },
-  { id = "DeepBook", name = "DeepBook" },
   { id = "MoveStdlib", name = "MoveStdlib" },
   { id = "Sui", name = "Sui" },
   { id = "SuiSystem", name = "SuiSystem" },
-  { id = "WAL", name = "WAL" },
-  { id = "Walrus", name = "Walrus" },
   { id = "WinterWalrus", name = "WinterWalrus" },
 ]
 
 [[move.package]]
 id = "Blizzard"
-source = { git = "https://github.com/interest-protocol/blizzard-interface.git", rev = "main", subdir = "blizzard" }
+source = { git = "https://github.com/interest-protocol/move-interfaces.git", rev = "main", subdir = "winter-walrus/blizzard" }
 
 dependencies = [
   { id = "Bridge", name = "Bridge" },
-  { id = "DeepBook", name = "DeepBook" },
   { id = "InterestBPS", name = "InterestBPS" },
   { id = "InterestMath", name = "InterestMath" },
   { id = "MoveStdlib", name = "MoveStdlib" },
@@ -36,7 +32,7 @@ dependencies = [
 
 [[move.package]]
 id = "Bridge"
-source = { git = "https://github.com/MystenLabs/sui.git", rev = "04f11afaf5e0", subdir = "crates/sui-framework/packages/bridge" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "79918a3f1357", subdir = "crates/sui-framework/packages/bridge" }
 
 dependencies = [
   { id = "MoveStdlib", name = "MoveStdlib" },
@@ -49,19 +45,14 @@ id = "BucketOracle"
 source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "" }
 
 dependencies = [
-  { id = "Pyth", name = "Pyth" },
+  { id = "Bridge", name = "Bridge" },
+  { id = "MoveStdlib", name = "MoveStdlib" },
+  { id = "PythLocal", name = "PythLocal" },
   { id = "Sui", name = "Sui" },
+  { id = "SuiSystem", name = "SuiSystem" },
   { id = "SupraOracle", name = "SupraOracle" },
   { id = "SwitchboardStdLib", name = "SwitchboardStdLib" },
-]
-
-[[move.package]]
-id = "DeepBook"
-source = { git = "https://github.com/MystenLabs/sui.git", rev = "04f11afaf5e0", subdir = "crates/sui-framework/packages/deepbook" }
-
-dependencies = [
-  { id = "MoveStdlib", name = "MoveStdlib" },
-  { id = "Sui", name = "Sui" },
+  { id = "Wormhole", name = "Wormhole" },
 ]
 
 [[move.package]]
@@ -70,7 +61,6 @@ source = { git = "https://github.com/interest-protocol/bps.git", rev = "main", s
 
 dependencies = [
   { id = "Bridge", name = "Bridge" },
-  { id = "DeepBook", name = "DeepBook" },
   { id = "MoveStdlib", name = "MoveStdlib" },
   { id = "Sui", name = "Sui" },
   { id = "SuiSystem", name = "SuiSystem" },
@@ -82,7 +72,6 @@ source = { git = "https://github.com/interest-protocol/interest-math.git", rev =
 
 dependencies = [
   { id = "Bridge", name = "Bridge" },
-  { id = "DeepBook", name = "DeepBook" },
   { id = "MoveStdlib", name = "MoveStdlib" },
   { id = "Sui", name = "Sui" },
   { id = "SuiSystem", name = "SuiSystem" },
@@ -90,10 +79,10 @@ dependencies = [
 
 [[move.package]]
 id = "MoveStdlib"
-source = { git = "https://github.com/MystenLabs/sui.git", rev = "04f11afaf5e0", subdir = "crates/sui-framework/packages/move-stdlib" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "79918a3f1357", subdir = "crates/sui-framework/packages/move-stdlib" }
 
 [[move.package]]
-id = "Pyth"
+id = "PythLocal"
 source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/pyth" }
 
 dependencies = [
@@ -103,7 +92,7 @@ dependencies = [
 
 [[move.package]]
 id = "Sui"
-source = { git = "https://github.com/MystenLabs/sui.git", rev = "04f11afaf5e0", subdir = "crates/sui-framework/packages/sui-framework" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "79918a3f1357", subdir = "crates/sui-framework/packages/sui-framework" }
 
 dependencies = [
   { id = "MoveStdlib", name = "MoveStdlib" },
@@ -111,7 +100,7 @@ dependencies = [
 
 [[move.package]]
 id = "SuiSystem"
-source = { git = "https://github.com/MystenLabs/sui.git", rev = "04f11afaf5e0", subdir = "crates/sui-framework/packages/sui-system" }
+source = { git = "https://github.com/MystenLabs/sui.git", rev = "79918a3f1357", subdir = "crates/sui-framework/packages/sui-system" }
 
 dependencies = [
   { id = "MoveStdlib", name = "MoveStdlib" },
@@ -120,15 +109,16 @@ dependencies = [
 
 [[move.package]]
 id = "SupraOracle"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/supra" }
+source = { git = "https://github.com/naviprotocol/dora-interface.git", rev = "main", subdir = "sui/mainnet/supra_holder" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
+  { id = "supra_validator", name = "supra_validator" },
 ]
 
 [[move.package]]
 id = "SwitchboardStdLib"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/switchboard" }
+source = { git = "https://github.com/Typus-Lab/sui-sdk.git", rev = "main", subdir = "move/mainnet/switchboard_std" }
 
 dependencies = [
   { id = "MoveStdlib", name = "MoveStdlib" },
@@ -137,7 +127,7 @@ dependencies = [
 
 [[move.package]]
 id = "WAL"
-source = { git = "https://github.com/MystenLabs/walrus.git", rev = "mainnet", subdir = "contracts/wal" }
+source = { git = "https://github.com/MystenLabs/walrus.git", rev = "main", subdir = "mainnet-contracts/wal" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
@@ -145,7 +135,7 @@ dependencies = [
 
 [[move.package]]
 id = "Walrus"
-source = { git = "https://github.com/MystenLabs/walrus.git", rev = "mainnet", subdir = "contracts/walrus" }
+source = { git = "https://github.com/MystenLabs/walrus.git", rev = "main", subdir = "mainnet-contracts/walrus" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
@@ -154,11 +144,10 @@ dependencies = [
 
 [[move.package]]
 id = "WinterWalrus"
-source = { git = "https://github.com/interest-protocol/blizzard-interface.git", rev = "main", subdir = "wwal" }
+source = { git = "https://github.com/interest-protocol/move-interfaces.git", rev = "main", subdir = "winter-walrus/wwal" }
 
 dependencies = [
   { id = "Bridge", name = "Bridge" },
-  { id = "DeepBook", name = "DeepBook" },
   { id = "MoveStdlib", name = "MoveStdlib" },
   { id = "Sui", name = "Sui" },
   { id = "SuiSystem", name = "SuiSystem" },
@@ -166,14 +155,31 @@ dependencies = [
 
 [[move.package]]
 id = "Wormhole"
-source = { git = "https://github.com/Bucket-Protocol/oracle.git", rev = "mainnet", subdir = "partners/pyth/wormhole" }
+source = { git = "https://github.com/wormhole-foundation/wormhole.git", rev = "sui/mainnet", subdir = "sui/wormhole" }
 
 dependencies = [
   { id = "Sui", name = "Sui" },
 ]
 
+[[move.package]]
+id = "supra_utils"
+source = { git = "https://github.com/naviprotocol/dora-interface.git", rev = "main", subdir = "sui/mainnet/supra_utils" }
+
+dependencies = [
+  { id = "Sui", name = "Sui" },
+]
+
+[[move.package]]
+id = "supra_validator"
+source = { git = "https://github.com/naviprotocol/dora-interface.git", rev = "main", subdir = "sui/mainnet/supra_validator" }
+
+dependencies = [
+  { id = "Sui", name = "Sui" },
+  { id = "supra_utils", name = "supra_utils" },
+]
+
 [move.toolchain-version]
-compiler-version = "1.46.0"
+compiler-version = "1.52.3"
 edition = "2024.beta"
 flavor = "sui"
 
@@ -182,5 +188,5 @@ flavor = "sui"
 [env.mainnet]
 chain-id = "35834a8a"
 original-published-id = "0x0697807e89307c7124aeb5847e817fbb49c7701e4f5b03f1d38a91bdee3e3f66"
-latest-published-id = "0x0697807e89307c7124aeb5847e817fbb49c7701e4f5b03f1d38a91bdee3e3f66"
-published-version = "1"
+latest-published-id = "0x21c5f12690b3545ed6dabebb99b4121347b5487c777e3513c70b108881075e6d"
+published-version = "2"
