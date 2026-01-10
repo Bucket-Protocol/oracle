@@ -75,13 +75,13 @@ public fun update_price<SCOIN, COIN>(
     config: &Config,
     oracle: &mut BucketOracle,
     version: &protocol::version::Version,
-    market: &mut protocol::market::Market, 
+    market: &mut protocol::market::Market,
     clock: &Clock,
 ) {
     if (!config.exists_pair<SCOIN, COIN>()) {
         err_invalid_scoin_type_inputs();
     };
-    let coin_type = type_name::get<COIN>();
+    let coin_type = type_name::with_defining_ids<COIN>();
     let (coin_price, coin_precision) = oracle.get_price<COIN>(clock);
     let scoin_unit = utils::calc_coin_to_scoin(
         version, market, coin_type, clock, coin_precision,
@@ -89,7 +89,7 @@ public fun update_price<SCOIN, COIN>(
     let scoin_oracle = oracle.borrow_single_oracle_mut<SCOIN>();
     let scoin_price = (
         scoin_oracle.precision() as u128) *
-        (coin_price as u128) / 
+        (coin_price as u128) /
         (scoin_unit as u128);
     scoin_oracle.update_oracle_price_with_rule(
         Rule {}, clock, (scoin_price as u64),
@@ -108,7 +108,7 @@ public fun exists_pair<SCOIN, COIN>(config: &Config): bool {
 
 fun new_scoin_pair<SCOIN, COIN>(): SCoinPair {
     SCoinPair {
-        scoin_type: type_name::get<SCOIN>(),
-        coin_type: type_name::get<COIN>(),
+        scoin_type: type_name::with_defining_ids<SCOIN>(),
+        coin_type: type_name::with_defining_ids<COIN>(),
     }
 }
